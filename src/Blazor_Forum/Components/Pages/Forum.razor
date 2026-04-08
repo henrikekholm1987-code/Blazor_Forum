@@ -1,4 +1,7 @@
-﻿@page "/forum"
+﻿@using Entities
+
+@page "/forum"
+
 @rendermode InteractiveServer
 
 <PageTitle>Forum</PageTitle>
@@ -13,108 +16,276 @@
         Others may simply exist.
     </p>
 
-
-    <!-- THREAD LIST CARD -->
-
     <div class="cb-card">
 
         <div class="cb-card-header">
             <span class="cb-keyword">threads</span>
         </div>
 
-
         @foreach (var thread in Threads)
         {
-            <div class="cb-thread" @onclick="() => OpenThread(thread.Id)">
-
+            <div class="cb-thread" @onclick="() => OpenThread(thread)">
                 <span class="cb-keyword">topic:</span>
-
-                <span class="cb-thread-title">
-                    @thread.Title
-                </span>
-
+                <span class="cb-thread-title">@thread.Title</span>
             </div>
         }
 
-
         <div class="cb-actions">
-
-            <button class="cb-btn cb-btn-primary"
-                    @onclick="CreateThread">
-
+            <button class="cb-btn cb-btn-primary" @onclick="CreateThread">
                 &#9654; new thread
-
             </button>
-
         </div>
 
     </div>
 
-
-
-    <!-- SYSTEM NOTICE BLOCK -->
-
     <div class="cb-canvas">
-
         <div class="cb-block">
-
             <span class="cb-keyword">if</span>
             something should be discussed:
-
             <div class="cb-announce">
-
                 <span class="cb-keyword">then</span>
                 <span class="cb-string">"create a thread"</span>
-
             </div>
-
-
-            <div class="cb-else-label">
-                else:
-            </div>
-
-
+            <div class="cb-else-label">else:</div>
             <div class="cb-announce">
-
                 <span class="cb-keyword">then</span>
                 <span class="cb-string">"observe existing threads"</span>
-
             </div>
-
         </div>
-
     </div>
 
 </div>
 
 
 
+
+@if (ActiveThread is not null)
+{
+    <div class="modal-backdrop" @onclick="CloseThread">
+        <div class="modal-box" @onclick:stopPropagation="true">
+
+            <div class="modal-header">
+                <div>
+                    <span class="cb-keyword">topic:</span>
+                    <span class="modal-title">@ActiveThread.Title</span>
+                </div>
+                <button class="modal-close" @onclick="CloseThread">&times;</button>
+            </div>
+
+            <div class="modal-comments">
+                @if (!ActiveThread.Comments.Any())
+                {
+                    <p class="modal-empty">No comments yet. Be the first.</p>
+                }
+                @foreach (var comment in ActiveThread.Comments)
+                {
+                    <div class="modal-comment">
+                        <div class="comment-meta">
+                            <div class="comment-avatar">
+                                @GetInitials(comment.User)
+                            </div>
+                            <span class="comment-author">@comment.User</span>
+                            <span class="comment-date">@comment.CreatedAt.ToString("yyyy-MM-dd HH:mm")</span>
+                        </div>
+                        <p class="comment-body">@comment.Text</p>
+                    </div>
+                }
+            </div>
+
+            <div class="modal-compose">
+                <textarea class="compose-text"
+                          rows="2"
+                          placeholder="Add a comment..."
+                          @bind="NewCommentText">
+                </textarea>
+                <div class="compose-row">
+                    <input class="compose-name"
+                           type="text"
+                           placeholder="your name"
+                           @bind="NewCommentAuthor" />
+                    <button class="cb-btn cb-btn-primary"
+                            @onclick="PostComment"
+                            disabled="@IsPostDisabled">
+                        &#9654; post comment
+                    </button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+}
+
+
 <style>
 
-.cb-thread
-{
+.cb-thread {
     padding: 10px 12px;
     border: 1.5px solid #2c2c2a;
     border-radius: 6px;
     background: white;
     margin-bottom: 8px;
-
     cursor: pointer;
 }
 
-.cb-thread:hover
-{
+.cb-thread:hover {
     background: #efeee9;
 }
 
-.cb-thread-title
-{
+.cb-thread-title {
     margin-left: 6px;
     color: #2c2c2a;
 }
 
-</style>
+/* Modal */
 
+.modal-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.45);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    padding: 1rem;
+}
+
+.modal-box {
+    background: white;
+    border-radius: 12px;
+    border: 0.5px solid #d3d1c7;
+    width: 100%;
+    max-width: 560px;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.modal-header {
+    padding: 14px 16px 12px;
+    border-bottom: 0.5px solid #d3d1c7;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.modal-title {
+    font-size: 15px;
+    font-weight: 500;
+    margin-left: 6px;
+    color: #2c2c2a;
+}
+
+.modal-close {
+    background: none;
+    border: none;
+    font-size: 20px;
+    color: #888780;
+    cursor: pointer;
+    line-height: 1;
+    padding: 0 2px;
+}
+
+.modal-close:hover {
+    color: #2c2c2a;
+}
+
+.modal-comments {
+    padding: 14px 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    max-height: 280px;
+    overflow-y: auto;
+}
+
+.modal-empty {
+    font-size: 14px;
+    color: #888780;
+    margin: 0;
+}
+
+.modal-comment {
+    background: #f1efe8;
+    border-radius: 8px;
+    padding: 10px 12px;
+}
+
+.comment-meta {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 5px;
+}
+
+.comment-avatar {
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    background: #CECBF6;
+    color: #3C3489;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    font-weight: 500;
+    flex-shrink: 0;
+}
+
+.comment-author {
+    font-size: 13px;
+    font-weight: 500;
+    color: #2c2c2a;
+}
+
+.comment-date {
+    font-size: 12px;
+    color: #888780;
+}
+
+.comment-body {
+    margin: 0;
+    font-size: 14px;
+    color: #2c2c2a;
+    line-height: 1.5;
+}
+
+.modal-compose {
+    padding: 12px 16px;
+    border-top: 0.5px solid #d3d1c7;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.compose-text {
+    width: 100%;
+    box-sizing: border-box;
+    resize: none;
+    font-size: 14px;
+    border: 0.5px solid #b4b2a9;
+    border-radius: 8px;
+    padding: 8px 10px;
+    font-family: inherit;
+    color: #2c2c2a;
+}
+
+.compose-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.compose-name {
+    width: 140px;
+    font-size: 13px;
+    padding: 6px 10px;
+    border: 0.5px solid #b4b2a9;
+    border-radius: 8px;
+    font-family: inherit;
+    color: #2c2c2a;
+}
+
+</style>
 
 
 @code {
@@ -122,13 +293,14 @@
     [Inject]
     NavigationManager Nav { get; set; }
 
+    ThreadItem? ActiveThread;
+    
+    string NewCommentText = "";
+    string NewCommentAuthor = "";
 
-    class ThreadItem
-    {
-        public int Id { get; set; }
-        public string Title { get; set; }
-    }
-
+    bool IsPostDisabled =>
+        string.IsNullOrWhiteSpace(NewCommentText) ||
+        string.IsNullOrWhiteSpace(NewCommentAuthor);
 
     List<ThreadItem> Threads = new()
     {
@@ -137,16 +309,45 @@
         new() { Id = 3, Title = "Strange problems in programming" }
     };
 
-
-    void OpenThread(int id)
+    void OpenThread(ThreadItem thread)
     {
-        Nav.NavigateTo($"/thread/{id}");
+        ActiveThread = thread;
+        NewCommentText = "";
+        NewCommentAuthor = "";
     }
 
+    void CloseThread()
+    {
+        ActiveThread = null;
+    }
+
+    void PostComment()
+    {
+        if (ActiveThread is null || IsPostDisabled) return;
+
+        ActiveThread.Comments.Add(new Comment
+        {
+            User = NewCommentAuthor.Trim(),
+            Text = NewCommentText.Trim(),
+            CreatedAt = DateTime.Now
+        });
+
+        NewCommentText = "";
+    }
 
     void CreateThread()
     {
         Nav.NavigateTo("/create-thread");
     }
+
+    string GetInitials(string name)
+    {
+        var parts = name.Trim().Split(' ', StringSplitOptions.RemoveEmptyEntries);
+        return parts.Length >= 2
+            ? $"{parts[0][0]}{parts[^1][0]}".ToUpper()
+            : name.Length >= 2 ? name[..2].ToUpper() : name.ToUpper();
+    }
+
+ 
 
 }

@@ -1,5 +1,4 @@
-﻿namespace Infrastructure;
-
+﻿namespace Entities;
 
 public class ThreadItem
 {
@@ -15,6 +14,7 @@ public class ThreadItem
     public List<Comment> Comments { get; set; } = new();
 }
 
+
 public class User
 {
     public int Id { get; set; }
@@ -24,12 +24,13 @@ public class User
 
 public class Comment
 {
+    public string User { get; set; } = "";
     public string Text { get; set; }
-    
+
     public int Id { get; set; }
     public string Content { get; set; } = null!;
     public DateTime CreatedAt { get; set; }
-    
+
     public int PostId { get; set; }
     public ThreadItem ThreadItem { get; set; } = null!;
 }

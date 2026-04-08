@@ -1,6 +1,81 @@
-namespace Blazor_Forum.Modal;
+@using Entities
 
-public class ThreadReader
+
+@if (isVisible && CurrentThread != null)
 {
-    
+    <div class="modal-overlay">
+        <div class="cb-card">
+            <div class="cb-textarea"
+                 size: 400px>
+
+                <h7>@CurrentThread.Title</h7>
+                
+                <div
+                    class="comment-list">
+                    
+                    @foreach (var comment in CurrentThread.Comments)
+                    {
+                        <div class="comment-item"
+                             type="text">
+                            @comment.Text;
+                        </div>
+                    }
+                </div>
+                
+                <div class="cb-field-group">
+                    
+                    <input class="cb-input" 
+                           type="text" 
+                           placeholder="your comment" 
+                           @bind="CommentText">
+                </div>
+                
+                <div class="cb-actions">
+                    <button class="cb-btn"
+                            @onclick="Cancel">
+                        cancel
+                    </button>
+
+                    <button class="cb-btn cb-btn-primary"
+                            @onclick="Comment">
+                        post
+                    </button>
+
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+
+@code
+{
+    [Parameter] public bool isVisible { get; set; }
+
+    [Parameter] public EventCallback<bool> isVisibleChanged { get; set; }
+
+    [Parameter] public ThreadItem? CurrentThread { get; set; }
+    [Parameter] public string? Title { get; set; }
+
+    public string CommentText { get; set; } = "";
+
+    void Comment()
+    {
+        if (CurrentThread == null || string.IsNullOrWhiteSpace(CommentText))
+            return;
+
+        CurrentThread.Comments.Add(new Comment
+        {
+            Text = CommentText
+        });
+
+        CommentText = "";
+
+        StateHasChanged();
+    }
+
+    void Cancel()
+    {
+        isVisibleChanged.InvokeAsync(false);
+    }
 }
