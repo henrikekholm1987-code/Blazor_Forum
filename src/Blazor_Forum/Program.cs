@@ -1,4 +1,10 @@
 using Blazor_Forum.Components;
+using Infrastructure;
+using Microsoft.EntityFrameworkCore;
+
+
+ // builder.Services.AddDbContext<ForumDbContext>(options =>
+ //     options.UseSqlite("Data Source=sqlite_forum.db"));
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -6,6 +12,7 @@ builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 
 var app = builder.Build();
+
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())

@@ -87,7 +87,7 @@
                             <span class="comment-author">@comment.User</span>
                             <span class="comment-date">@comment.CreatedAt.ToString("yyyy-MM-dd HH:mm")</span>
                         </div>
-                        <p class="comment-body">@comment.Text</p>
+                        <p class="comment-body">@comment.Content</p>
                     </div>
                 }
             </div>
@@ -328,7 +328,7 @@
         ActiveThread.Comments.Add(new Comment
         {
             User = NewCommentAuthor.Trim(),
-            Text = NewCommentText.Trim(),
+            Content = NewCommentText.Trim(),
             CreatedAt = DateTime.Now
         });
 
@@ -343,11 +343,9 @@
     string GetInitials(string name)
     {
         var parts = name.Trim().Split(' ', StringSplitOptions.RemoveEmptyEntries);
+        
         return parts.Length >= 2
             ? $"{parts[0][0]}{parts[^1][0]}".ToUpper()
             : name.Length >= 2 ? name[..2].ToUpper() : name.ToUpper();
     }
-
- 
-
 }
