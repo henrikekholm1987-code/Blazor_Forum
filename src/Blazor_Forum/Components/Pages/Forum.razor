@@ -56,8 +56,46 @@
 
 </div>
 
+@if (creationOfThread is true)
+{
+     <div class="modal-backdrop" @onclick="DeleteThread">
+        <div class="modal-box" @onclick:stopPropagation="true">
+            <div>
+                <div class="modal-header">
+                    
+                    <span class="cb-keyword">topic:</span>
+                                 
+                    <textarea class="compose-headline"
+                              rows="1"
+                              placeholder="headline...">
+                    </textarea>
+                    
+                    <button class="modal-close" @onclick="DeleteThread">&times;
+                    </button>
+                    
+                </div>
+                <div class="modal-compose">
+                        
+                    <textarea class="compose-text"
+                              rows="2"
+                              placeholder="text of topic...">
+                    </textarea>
 
-
+                    <div class="compose-row">
+                        <input class="compose-name"
+                               type="text"
+                               placeholder="your name"/>
+                        <button class="cb-btn cb-btn-primary"
+                                @onclick="PostThread"
+                                disabled="@IsPostDisabled">
+                            &#9654; post thread
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
 
 @if (ActiveThread is not null)
 {
@@ -268,6 +306,16 @@
     font-family: inherit;
     color: #2c2c2a;
 }
+.compose-headline {
+    width: 80%;
+    resize: none;
+    font-size: 14px;
+    border-radius: 8px;
+    padding: 8px 10px;
+    font-family: inherit;
+    color: #2c2c2a;
+}
+
 
 .compose-row {
     display: flex;
@@ -295,11 +343,18 @@
 
     ThreadItem? ActiveThread;
     
+    bool creationOfThread;
+    
     string NewCommentText = "";
     string NewCommentAuthor = "";
 
     bool IsPostDisabled =>
         string.IsNullOrWhiteSpace(NewCommentText) ||
+        string.IsNullOrWhiteSpace(NewCommentAuthor);
+    
+    
+    bool IsCommentDisabled =>
+        string.IsNullOrWhiteSpace(NewCommentText) || 
         string.IsNullOrWhiteSpace(NewCommentAuthor);
 
     List<ThreadItem> Threads = new()
@@ -308,6 +363,15 @@
         new() { Id = 2, Title = "Books worth reading this year" },
         new() { Id = 3, Title = "Strange problems in programming" }
     };
+    void CreateThread()
+    {
+        creationOfThread = true;
+    }
+
+    void DeleteThread()
+    {
+        creationOfThread = false;
+    }
 
     void OpenThread(ThreadItem thread)
     {
@@ -319,6 +383,11 @@
     void CloseThread()
     {
         ActiveThread = null;
+    }
+
+    void PostThread()
+    {
+        creationOfThread = false;
     }
 
     void PostComment()
@@ -333,11 +402,6 @@
         });
 
         NewCommentText = "";
-    }
-
-    void CreateThread()
-    {
-        Nav.NavigateTo("/create-thread");
     }
 
     string GetInitials(string name)

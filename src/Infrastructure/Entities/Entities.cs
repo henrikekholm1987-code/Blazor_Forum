@@ -12,14 +12,16 @@ public class ThreadItem
     public DateTime CreatedAt { get; set; }
 
     public string UserId { get; set; } = null!;
+    
     public ApplicationUser Author { get; set; } = null!;
     public List<Comment> Comments { get; set; } = new();
 }
 
 public class ApplicationUser: IdentityUser
 {
-    public string UserId { get; set; } = null!;
+    public string Id { get; set; } = null!;
     public string Username { get; set; } = null!;
+    
     public List<ThreadItem> ThreadItem { get; set; } = new();
 }
 

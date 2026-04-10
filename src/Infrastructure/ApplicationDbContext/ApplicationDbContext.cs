@@ -9,15 +9,15 @@ public class  ApplicationDbContext : IdentityDbContext<ApplicationUser>
 {
     public ApplicationDbContext(DbContextOptions< ApplicationDbContext> options)
         : base(options) { }
-
-    public DbSet<ThreadItem> Threads => Set<ThreadItem>();
     public DbSet<ApplicationUser> ApplicationUsers => Set<ApplicationUser>();
     public DbSet<ThreadItem> ThreadItems => Set<ThreadItem>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
-
+        
+        //modelBuilder.ApplyConfigurationsFromAssembly(typeof(ApplicationDbContext).Assembly);
+        
         modelBuilder.Entity<ApplicationUser>()
             .HasIndex(u => u.Username)
             .IsUnique();
