@@ -1,7 +1,8 @@
 @page "/"
 @using Application
+@using Application.Services
 @rendermode InteractiveServer
-
+@inject CreateAccountModalState ModalState
 
 <PageTitle>Forum</PageTitle>
 
@@ -37,11 +38,10 @@
 
         <div class="cb-actions">
             <button class="cb-btn cb-btn-primary" @onclick="LoginButton">  &#9654; Login</button>
-            <button class="cb-btn cb-btn-secondary" @onclick="OnLoginClicked"> Create account</button>
+            <button class="cb-btn cb-btn-secondary" @onclick="OnCreateAccount"> Create account</button>
             
         </div>
     </div>
-
     
     <div class="cb-canvas">
         <div class="cb-block">
@@ -57,11 +57,10 @@
             </div>
         </div>
     </div>
-
 </div>
 
-
-@if (createAccount is true)
+<!--
+@if (  false)
 {
     <div class="modal-backdrop" @onclick="CloseCreateAccount">
         <div class="modal-box" @onclick:stopPropagation="true">
@@ -107,7 +106,8 @@
 
         </div>
     </div>
-}
+}-->
+
 
 <style>
 
@@ -147,7 +147,7 @@
     border-radius: 12px;
     border: 0.5px solid #d3d1c7;
     width: 100%;
-    max-width: 560px;
+    max-width: 320px;
     display: flex;
     flex-direction: column;
     overflow: hidden;
@@ -290,39 +290,16 @@
 
 </style>
 
+<CreateAccountModal/>
 
-@code {
+@code 
+{
     [Inject]
+    
     NavigationManager Nav { get; set; }
     
-    bool createAccount = false;
+    private void OnCreateAccount() => ModalState.Show();
     
-    string CreateUserName = "";
-    string CreateUserPassword = "";
-    string ConfirmPassword = "";
+    private void LoginButton() => Nav.NavigateTo("/forum");
     
-    bool IsCreateDisabled => 
-        string.IsNullOrWhiteSpace(CreateUserPassword)||
-        string.IsNullOrWhiteSpace(ConfirmPassword)||
-        CreateUserPassword != ConfirmPassword;
-    
-    private void LoginButton()
-    {
-        Nav.NavigateTo("/forum");
-    }
-
-    void OnLoginClicked()
-    {
-        createAccount = true;
-    }
-    void CloseCreateAccount()
-    {
-        createAccount = false;
-    }
-
-    void CreateAccountSubmit()
-    {
-        if(IsCreateDisabled) return;
-        createAccount = true;
-    }
 }

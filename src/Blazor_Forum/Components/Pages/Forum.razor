@@ -1,7 +1,5 @@
 ﻿@using Entities
-
 @page "/forum"
-
 @rendermode InteractiveServer
 
 <PageTitle>Forum</PageTitle>
@@ -9,7 +7,6 @@
 <div class="home-wrapper">
 
     <h1 class="home-title">Forum</h1>
-
     <p class="home-subtitle">
         The discussions listed below are arranged in no particular order.
         Some may be useful.
@@ -120,9 +117,9 @@
                     <div class="modal-comment">
                         <div class="comment-meta">
                             <div class="comment-avatar">
-                                @GetInitials(comment.User)
+                                @GetInitials(comment.AuthorId)
                             </div>
-                            <span class="comment-author">@comment.User</span>
+                            <span class="comment-author">@comment.AuthorId</span>
                             <span class="comment-date">@comment.CreatedAt.ToString("yyyy-MM-dd HH:mm")</span>
                         </div>
                         <p class="comment-body">@comment.Content</p>
@@ -359,9 +356,9 @@
 
     List<ThreadItem> Threads = new()
     {
-        new() { Id = 1, Title = "Welcome to the forum" },
-        new() { Id = 2, Title = "Books worth reading this year" },
-        new() { Id = 3, Title = "Strange problems in programming" }
+        new() { ThreadId = 1, Title = "Welcome to the forum" },
+        new() { ThreadId = 2, Title = "Books worth reading this year" },
+        new() { ThreadId = 3, Title = "Strange problems in programming" }
     };
     void CreateThread()
     {
@@ -396,7 +393,7 @@
 
         ActiveThread.Comments.Add(new Comment
         {
-            User = NewCommentAuthor.Trim(),
+            AuthorId = NewCommentAuthor.Trim(),
             Content = NewCommentText.Trim(),
             CreatedAt = DateTime.Now
         });

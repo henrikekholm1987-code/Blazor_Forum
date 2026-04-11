@@ -1,0 +1,71 @@
+@using Application.Services
+@inject CreateAccountModalState ModalState
+
+@if (ModalState.Visible)
+{
+    <div class="modal-backdrop" @onclick="Close">
+        <div class="modal-box" @onclick:stopPropagation="true">
+
+            <div class="modal-header">
+                <span class="cb-keyword">create account</span>
+
+                <button class="modal-close" @onclick="Close">
+                    &times;
+                </button>
+            </div>
+
+            <div class="modal-compose">
+
+                <input class="compose-name"
+                       placeholder="username"
+                       @bind="Username" />
+
+                <input class="compose-name"
+                       type="password"
+                       placeholder="password"
+                       @bind="Password" />
+
+                <input class="compose-name"
+                       type="password"
+                       placeholder="confirm password"
+                       @bind="ConfirmPassword" />
+
+                <button class="cb-btn cb-btn-primary"
+                        @onclick="Submit"
+                        disabled="@IsDisabled">
+
+                    create account
+
+                </button>
+
+            </div>
+
+        </div>
+    </div>
+}
+@code {
+
+    string Username = "";
+    string Password = "";
+    string ConfirmPassword = "";
+
+    bool IsDisabled =>
+        string.IsNullOrWhiteSpace(Password)
+        || Password != ConfirmPassword;
+
+    void Close()
+    {
+        ModalState.Close();
+    }
+
+    void Submit()
+    {
+        if (IsDisabled)
+            return;
+
+        // user creation happens next step
+
+        ModalState.Close();
+    }
+
+}
