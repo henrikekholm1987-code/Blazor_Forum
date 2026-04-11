@@ -1,6 +1,6 @@
 namespace Application.Services;
 
-public class CreateAccountModalState
+public class RegisterServices
 {
     public bool Visible { get; private set; }
 

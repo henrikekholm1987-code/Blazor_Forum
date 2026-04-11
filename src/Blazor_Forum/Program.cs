@@ -13,7 +13,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 
-builder.Services.AddScoped<CreateAccountModalState>();
+builder.Services.AddScoped<RegisterServices>();
 
 var app = builder.Build();
 
