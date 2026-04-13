@@ -2,9 +2,7 @@
 @using Blazor_Forum.Modal
 @inject CreateAccountModalState ModalState
 
-
 <div class="home-wrapper">
-
     <h1 class="home-title">Blazor Forum</h1>
     
     <p class="home-subtitle"> 
@@ -241,15 +239,12 @@
 
 @code 
 {
-    [Inject]
-    NavigationManager? Nav { get; set; }
+    [Inject] NavigationManager? Nav { get; set; }
     // private void LoginButton() => Nav.NavigateTo("/forum");
-    
     
     private async Task LoginButton()
     {
-        //Nav.NavigateTo("/forum");
-        Nav.NavigateTo("/forum", forceLoad: true);
+        Nav.NavigateTo("/forum");
     }
     
     void OpenRegisterModal() => ModalState.Show();

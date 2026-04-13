@@ -1,34 +1,39 @@
 using Entities;
+using Infrastructure.Persistence;
 
 namespace Application.Users;
 
 public class UserService
 {
-    private List<ApplicationUser> users = new();
-
-    public  ApplicationUser? CreateUser(string username, string password)
+    // private List<ApplicationUser> users = new();
+    
+    ApplicationDbContext _dbContext;
+    public UserService(ApplicationDbContext dbContext)
     {
-        if (users.Any(u => u.UserName == username))
-            return null;
+        _dbContext = dbContext;
+    }
 
+    public ApplicationUser CreateUser(string username, string password)
+    {
         var user = new ApplicationUser()
         {
-            ApplicationUserId = users.Count + 1,
+            
             UserName = username,
             Password = password
         };
 
-        users.Add(user);
+        _dbContext.Add(user);
+        _dbContext.SaveChanges();
 
         return user;
     }
 
-    public ApplicationUser? Login(string username, string password)
-    {
-        return users.FirstOrDefault(
-            u => u.UserName == username &&
-                 u.Password == password
-        );
-    }
+    // public ApplicationUser? Login(string username, string password)
+    // {
+    //     return _dbContext.FirstOrDefault(
+    //         u => u.UserName == username &&
+    //              u.Password == password
+    //     );
+    // }
 }
 

@@ -1,6 +1,64 @@
-@page "/admin/dashboard"
-<h3>Dashboard</h3>
+@page "/dashboard"
 
-@code {
+@using Application.Users
+@using Entities
+
+@using Infrastructure.Persistence
+
+
+<div class="home-wrapper">
+    <h1 class="home-title">Dashboard</h1>
     
+    <p class="home-subtitle">
+        The content posted on this forum is the responsibility of the individuals involved.
+        Out of respect for common sense, the details are left unchanged.
+
+        Cookies may be used to improve your experience and maintain security.
+        No one has objected so far.
+
+        By creating an account, you agree to receive essential service messages.
+        We expect everything to go just fine.
+
+    </p>
+    
+    <div class="cb-card">
+
+        <div class="cb-card-header">
+            <span class="cb-keyword">threads</span>
+        </div>
+        
+    </div>
+
+    <div class="cb-canvas">
+        <div class="cb-block">
+            <span class="cb-keyword">if</span> you have an account:
+            <div class="cb-announce">
+                <span class="cb-keyword">then</span>
+                <span class="cb-string">"login"</span>
+            </div>
+            <div class="cb-else-label">else:</div>
+            <div class="cb-announce">
+                <span class="cb-keyword">then</span>
+                <span class="cb-string">"create a new account"</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@code 
+{
+    // List <ApplicationUser> ApplicationUsers => @from ApplicationUser in ApplicationUsers select ApplicationUser;
+    // private List <ApplicationUser> users = new();
+    
+    // protected override void OnInitialized()
+    // {
+    //     users = db.ApplicationUsers.ToList();
+    // }
+    
+    private async Task LoginButton()
+    {
+        //Nav.NavigateTo("/forum");
+        
+    }
 }

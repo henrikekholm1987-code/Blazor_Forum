@@ -61,7 +61,6 @@
                     
                     <span class="cb-keyword">topic:</span>
                     
-                    
                     <textarea class="compose-text"
                       rows="2"
                       @bind="NewThreadTitle">
@@ -112,7 +111,7 @@
                 {
                     <p class="modal-empty">No comments yet. Be the first.</p>
                 }
-                @foreach (var comment in ActiveThread.Comments)
+                <!--@foreach (var comment in ActiveThread.Comments)
                 {
                     <div class="modal-comment">
                         <div class="comment-meta">
@@ -124,7 +123,7 @@
                         </div>
                         <p class="comment-body">@comment.Content</p>
                     </div>
-                }
+                } -->
             </div>
 
             <div class="modal-compose">
@@ -339,7 +338,6 @@
 
     [Inject]
     NavigationManager Nav { get; set; }
-
     
     ThreadItem? ActiveThread;
     
@@ -398,7 +396,7 @@
 
         ActiveThread.Comments.Add(new Comment
         {
-            AuthorId = NewCommentAuthor.Trim(),
+           
             Content = NewCommentText.Trim(),
             CreatedAt = DateTime.Now
         });

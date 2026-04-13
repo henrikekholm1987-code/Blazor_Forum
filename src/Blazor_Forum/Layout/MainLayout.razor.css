@@ -5,8 +5,6 @@
 }
 
 
-
-
 @media (max-width: 640.98px) {
     .top-row {
         justify-content: space-between;
@@ -21,8 +19,6 @@
     .page {
         flex-direction: row;
     }
-
-
 
     .top-row {
         position: sticky;

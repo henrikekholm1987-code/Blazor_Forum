@@ -8,7 +8,6 @@ public class CreateAccountModalState
     {
         OnShow?.Invoke();
     }
-
     public void Close()
     {
         OnClose?.Invoke();
