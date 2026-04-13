@@ -1,10 +1,7 @@
 @page "/"
-@using Application
-@using Application.Services
-@rendermode InteractiveServer
-@inject RegisterServices ModalState
+@using Blazor_Forum.Modal
+@inject CreateAccountModalState ModalState
 
-<PageTitle>Forum</PageTitle>
 
 <div class="home-wrapper">
 
@@ -38,7 +35,7 @@
 
         <div class="cb-actions">
             <button class="cb-btn cb-btn-primary" @onclick="LoginButton">  &#9654; Login</button>
-            <button class="cb-btn cb-btn-secondary" @onclick="OnCreateAccount"> Create account</button>
+            <button class="cb-btn cb-btn-secondary" @onclick="OpenRegisterModal"> Create account</button>
             
         </div>
     </div>
@@ -59,55 +56,7 @@
     </div>
 </div>
 
-<!--
-@if (  false)
-{
-    <div class="modal-backdrop" @onclick="CloseCreateAccount">
-        <div class="modal-box" @onclick:stopPropagation="true">
-
-            <div class="modal-header">
-                <span class="cb-keyword">create account</span>
-
-                <button class="modal-close" @onclick="CloseCreateAccount">
-                    &times;
-                </button>
-            </div>
-
-            <div class="modal-compose">
-
-                <input class="compose-name"
-                       type="text"
-                       placeholder="username"
-                       @bind="CreateUserName" />
-
-                <input class="compose-name"
-                       type="password"
-                       placeholder="password"
-                       @bind="CreateUserPassword" />
-
-                <input class="compose-name"
-                       type="password"
-                       placeholder="confirm password"
-                       @bind="ConfirmPassword" />
-
-                <div class="compose-row">
-
-                    <button class="cb-btn cb-btn-primary"
-                            @onclick="CreateAccountSubmit"
-                            disabled="@IsCreateDisabled">
-
-                        &#9654; create account
-
-                    </button>
-
-                </div>
-
-            </div>
-
-        </div>
-    </div>
-}-->
-
+<CreateAccountModal />
 
 <style>
 
@@ -290,16 +239,19 @@
 
 </style>
 
-<CreateAccountModal/>
-
 @code 
 {
     [Inject]
+    NavigationManager? Nav { get; set; }
+    // private void LoginButton() => Nav.NavigateTo("/forum");
     
-    NavigationManager Nav { get; set; }
     
-    private void OnCreateAccount() => ModalState.Show();
+    private async Task LoginButton()
+    {
+        //Nav.NavigateTo("/forum");
+        Nav.NavigateTo("/forum", forceLoad: true);
+    }
     
-    private void LoginButton() => Nav.NavigateTo("/forum");
-    
+    void OpenRegisterModal() => ModalState.Show();
+   
 }

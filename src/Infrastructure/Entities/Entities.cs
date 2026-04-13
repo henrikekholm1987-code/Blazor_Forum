@@ -8,8 +8,8 @@ public class ThreadItem
     public int ThreadId { get; set; }
     public string Title { get; set; } = "";
     public string ThreadContent { get; set; } = "";
+    
     public DateTime CreatedAt { get; set; }
-
     public string AuthorId { get; set; } = null!;
     public ApplicationUser Author { get; set; } = null!;
     public List<Comment> Comments { get; set; } = new();

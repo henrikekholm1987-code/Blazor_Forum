@@ -1,7 +1,7 @@
 using Entities;
 using Microsoft.AspNetCore.Identity;
 
-namespace Application.Services;
+namespace Application.Auth;
 
 public class AuthService: IAuthService
 {
@@ -53,3 +53,4 @@ public class UserService
         );
     }
 }
+

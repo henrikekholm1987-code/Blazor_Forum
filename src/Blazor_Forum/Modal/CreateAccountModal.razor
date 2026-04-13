@@ -1,7 +1,10 @@
-@using Application.Services
-@inject RegisterServices ModalState
+@using Application.Auth
+@using Entities
 
-@if (ModalState.Visible)
+@inject CreateAccountModalState ModalState
+@inject UserService UserService
+
+@if (Visible)
 {
     <div class="modal-backdrop" @onclick="Close">
         <div class="modal-box" @onclick:stopPropagation="true">
@@ -10,12 +13,12 @@
                 <span class="cb-keyword">create account</span>
 
                 <button class="modal-close" @onclick="Close">
-                    &times;
+                    &times
                 </button>
             </div>
 
             <div class="modal-compose">
-
+                
                 <input class="compose-name"
                        placeholder="username"
                        @bind="Username" />
@@ -39,11 +42,12 @@
                 </button>
 
             </div>
-
         </div>
     </div>
 }
-@code {
+@code 
+{
+    ApplicationUser _applicationUser = new ApplicationUser();
 
     string Username = "";
     string Password = "";
@@ -53,19 +57,38 @@
         string.IsNullOrWhiteSpace(Password)
         || Password != ConfirmPassword;
 
-    void Close()
+    public bool Visible { get; private set; }
+
+    protected override void OnInitialized()
     {
-        ModalState.Close();
+        ModalState.OnShow += Open;
+        ModalState.OnClose += Close;
     }
 
-    void Submit()
+    void Open()
     {
-        if (IsDisabled)
-            return;
+        Visible = true;
+        StateHasChanged();
+    }
 
-        // user creation happens next step
+    void Close()
+    {
+        Visible = false;
+        StateHasChanged();
+    }
 
-        ModalState.Close();
+    private void Submit()
+    {
+        // 1. Kolla att Password == ConfirmPassword
+        // 2. Anropa din service
+        UserService.CreateUser(Username, Password);
+        // 3. Navigera eller visa bekräftelse
+    }
+
+    public void Dispose()
+    {
+        ModalState.OnShow -= Open;
+        ModalState.OnClose -= Close;
     }
 
 }

@@ -1,7 +1,5 @@
 ﻿@using Entities
 @page "/forum"
-@rendermode InteractiveServer
- 
 
 <PageTitle>Forum</PageTitle>
 
@@ -62,10 +60,11 @@
                 <div class="modal-header">
                     
                     <span class="cb-keyword">topic:</span>
-                                 
-                    <textarea class="compose-headline"
-                              rows="1"
-                              placeholder="headline...">
+                    
+                    
+                    <textarea class="compose-text"
+                      rows="2"
+                      @bind="NewThreadTitle">
                     </textarea>
                     
                     <button class="modal-close" @onclick="DeleteThread">&times;
@@ -305,9 +304,11 @@
     color: #2c2c2a;
 }
 .compose-headline {
-    width: 80%;
+    width: 100%;
+    box-sizing: border-box;
     resize: none;
     font-size: 14px;
+    border: 0.5px solid #b4b2a9;
     border-radius: 8px;
     padding: 8px 10px;
     font-family: inherit;
@@ -339,9 +340,13 @@
     [Inject]
     NavigationManager Nav { get; set; }
 
+    
     ThreadItem? ActiveThread;
     
     bool creationOfThread;
+    
+    string NewThreadTitle = "";
+    string NewThreadContent = "";
     
     string NewCommentText = "";
     string NewCommentAuthor = "";
@@ -349,7 +354,6 @@
     bool IsPostDisabled =>
         string.IsNullOrWhiteSpace(NewCommentText) ||
         string.IsNullOrWhiteSpace(NewCommentAuthor);
-    
     
     bool IsCommentDisabled =>
         string.IsNullOrWhiteSpace(NewCommentText) || 

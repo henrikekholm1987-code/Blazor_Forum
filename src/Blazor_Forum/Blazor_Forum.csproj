@@ -7,12 +7,24 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\Infrastructure\Infrastructure.csproj" />
-      <ProjectReference Include="..\Application\Application.csproj" />
+        <ProjectReference Include="..\Infrastructure\Infrastructure.csproj" />
+        <ProjectReference Include="..\Application\Application.csproj" />
+        <ProjectReference Include="..\Domain\Domain.csproj" />
     </ItemGroup>
 
     <ItemGroup>
-      <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="8" />
+        <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="8.0.0" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <Folder Include="Components\" />
+        <Folder Include="State\" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <AdditionalFiles Include="App.razor" />
+      <AdditionalFiles Include="Routes.razor" />
+      <AdditionalFiles Include="_Imports.razor" />
     </ItemGroup>
 
 </Project>
