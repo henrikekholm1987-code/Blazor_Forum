@@ -1,5 +1,4 @@
 ﻿
-using Microsoft.AspNetCore.Identity;
 
 namespace Entities;
 
@@ -15,7 +14,7 @@ public class ThreadItem
     public List<Comment> Comments { get; set; } = new();
 }
 
-public class ApplicationUser : IdentityUser
+public class ApplicationUser 
 {
     public int ApplicationUserId { get; set; }
     public string UserName { get; set; }
