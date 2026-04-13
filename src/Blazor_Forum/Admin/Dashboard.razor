@@ -1,25 +1,29 @@
-@page "/dashboard"
+@page "/"
 
 @using Application.Users
 @using Entities
 
-@using Infrastructure.Persistence
+@inject UserService UserService
 
 
 <div class="home-wrapper">
     <h1 class="home-title">Dashboard</h1>
     
-    <p class="home-subtitle">
-        The content posted on this forum is the responsibility of the individuals involved.
-        Out of respect for common sense, the details are left unchanged.
+    <div class="cb-card">
 
-        Cookies may be used to improve your experience and maintain security.
-        No one has objected so far.
+        <div class="cb-card-header">
+            <span class="cb-keyword">threads</span>
+        </div>
 
-        By creating an account, you agree to receive essential service messages.
-        We expect everything to go just fine.
+        @foreach (var author in users)
+        {
+            <div class="cb-thread" @onclick="() => OpenAuthor(author)">
+                <span class="cb-keyword">ApplicationUser</span>
+                <span class="cb-thread-title">@author.UserName</span>
+            </div>
+        }
 
-    </p>
+    </div>
     
     <div class="cb-card">
 
@@ -48,13 +52,24 @@
 
 @code 
 {
-    // List <ApplicationUser> ApplicationUsers => @from ApplicationUser in ApplicationUsers select ApplicationUser;
-    // private List <ApplicationUser> users = new();
+     // List <ApplicationUser> ApplicationUsers =>  in ApplicationUsers select ApplicationUser;
     
-    // protected override void OnInitialized()
-    // {
-    //     users = db.ApplicationUsers.ToList();
-    // }
+    
+    ApplicationUser _author {get; set;}
+    
+    private List <ApplicationUser> users = new();
+    
+    protected override void OnInitialized()
+    {
+        users = UserService.GetAllUsers();
+    }
+
+    void OpenAuthor(ApplicationUser author)
+    {
+        author.ApplicationUserId = author.ApplicationUserId;
+    }
+    
+    
     
     private async Task LoginButton()
     {

@@ -27,6 +27,11 @@ public class UserService
 
         return user;
     }
+    
+    public List<ApplicationUser> GetAllUsers()
+    {
+        return _dbContext.ApplicationUsers.ToList();
+    }
 
     // public ApplicationUser? Login(string username, string password)
     // {
