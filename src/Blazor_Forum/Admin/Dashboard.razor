@@ -2,7 +2,9 @@
 
 @using Application.Users
 @using Entities
+@using Microsoft.AspNetCore.Authorization
 
+@layout Layout.AdminLayout
 @inject UserService UserService
 
 
@@ -15,40 +17,20 @@
             <span class="cb-keyword">threads</span>
         </div>
 
-        @foreach (var author in users)
+        @foreach (var appuser in users)
         {
-            <div class="cb-thread" @onclick="() => OpenAuthor(author)">
+            <div class="cb-thread" @onclick="() => OpenAuthor(appuser)">
                 <span class="cb-keyword">ApplicationUser</span>
-                <span class="cb-thread-title">@author.UserName</span>
+                <span class="cb-thread-title">@appuser.UserName</span>
             </div>
         }
 
     </div>
     
     <div class="cb-card">
-
-        <div class="cb-card-header">
-            <span class="cb-keyword">threads</span>
-        </div>
         
     </div>
-
-    <div class="cb-canvas">
-        <div class="cb-block">
-            <span class="cb-keyword">if</span> you have an account:
-            <div class="cb-announce">
-                <span class="cb-keyword">then</span>
-                <span class="cb-string">"login"</span>
-            </div>
-            <div class="cb-else-label">else:</div>
-            <div class="cb-announce">
-                <span class="cb-keyword">then</span>
-                <span class="cb-string">"create a new account"</span>
-            </div>
-        </div>
-    </div>
 </div>
-
 
 @code 
 {

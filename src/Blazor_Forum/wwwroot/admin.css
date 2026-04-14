@@ -1,0 +1,68 @@
+/* wwwroot/css/admin.css */
+
+.admin-wrapper {
+    background-color: #0d0d0c;
+    min-height: 100vh;
+    margin: 0;
+}
+
+.admin-wrapper .home-wrapper {
+    font-family: 'Courier New', Courier, monospace;
+    max-width: 480px;
+    margin: 2rem auto;
+    padding: 1.5rem;
+}
+
+.admin-wrapper .home-title {
+    font-family: Georgia, serif;
+    font-size: 28px;
+    font-weight: normal;
+    color: #e8e6df;
+    margin-bottom: 1rem;
+}
+
+.admin-wrapper .cb-card {
+    background: #141413;
+    border: 1px solid #2e2e2b;
+    border-radius: 12px;
+    padding: 1.25rem;
+    margin-bottom: 1rem;
+}
+
+.admin-wrapper .cb-card-header {
+    font-size: 13px;
+    font-weight: 700;
+    color: #888880;
+    margin-bottom: 1rem;
+    border-bottom: 1px solid #2e2e2b;
+    padding-bottom: 8px;
+    letter-spacing: 0.05em;
+    text-transform: lowercase;
+}
+
+.admin-wrapper .cb-thread {
+    padding: 10px 12px;
+    border: 1px solid #2e2e2b;
+    border-radius: 6px;
+    background: #1c1c1a;
+    margin-bottom: 8px;
+    cursor: pointer;
+    transition: background 0.15s ease, border-color 0.15s ease;
+}
+
+.admin-wrapper .cb-thread:hover {
+    background: #232321;
+    border-color: #4a4a46;
+}
+
+.admin-wrapper .cb-keyword {
+    color: #7ec8a4;
+    font-size: 13px;
+    font-weight: 700;
+}
+
+.admin-wrapper .cb-thread-title {
+    margin-left: 6px;
+    color: #c9b99a;
+    font-size: 14px;
+}
