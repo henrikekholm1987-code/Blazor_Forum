@@ -81,6 +81,11 @@
 .cb-keyword {
     font-weight: 700;
 }
+.cd-modal-close
+{
+    margin-left: auto;
+    cursor: pointer;   
+}
 
 .cb-string {
     color: #555;

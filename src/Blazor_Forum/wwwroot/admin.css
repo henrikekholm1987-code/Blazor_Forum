@@ -1,12 +1,20 @@
-/* wwwroot/css/admin.css */
+
 
 .admin-wrapper {
     background-color: #0d0d0c;
     min-height: 100vh;
     margin: 0;
+    padding: 0;
 }
 
-.admin-wrapper .home-wrapper {
+.admin-content {
+    background-color: #0d0d0c;
+    padding: 0;
+    margin: 0;
+}
+
+
+.admin-wrapper.home-wrapper {
     font-family: 'Courier New', Courier, monospace;
     max-width: 480px;
     margin: 2rem auto;
@@ -17,7 +25,7 @@
     font-family: Georgia, serif;
     font-size: 28px;
     font-weight: normal;
-    color: #e8e6df;
+    color: #811250;
     margin-bottom: 1rem;
 }
 

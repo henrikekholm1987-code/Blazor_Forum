@@ -1,4 +1,4 @@
-@page "/"
+@page "/dashboard"
 
 @using Application.Users
 @using Entities
@@ -12,29 +12,24 @@
     <h1 class="home-title">Dashboard</h1>
     
     <div class="cb-card">
-
         <div class="cb-card-header">
-            <span class="cb-keyword">threads</span>
+            <span class="cb-keyword">applications</span>
+            
+            @foreach (var appuser in users)
+            {
+                <div class="cb-thread" @onclick="() => OpenAuthor(appuser)">
+                    <span class="cb-keyword">ApplicationUser</span>
+                    <span class="cb-thread-title">@appuser.UserName</span>
+                    <span class="cb-modal-close" @onclick="() => DeleteAuthor(appuser)">✕</span>
+                </div>
+            }
         </div>
-
-        @foreach (var appuser in users)
-        {
-            <div class="cb-thread" @onclick="() => OpenAuthor(appuser)">
-                <span class="cb-keyword">ApplicationUser</span>
-                <span class="cb-thread-title">@appuser.UserName</span>
-            </div>
-        }
-
-    </div>
-    
-    <div class="cb-card">
-        
     </div>
 </div>
 
 @code 
 {
-    ApplicationUser _author {get; set;}
+    ApplicationUser _author {get; set;} // @attribute [Authorize(Roles = "Admin")]
     
     private List <ApplicationUser> users = new();
     
@@ -47,9 +42,11 @@
     {
         author.ApplicationUserId = author.ApplicationUserId;
     }
-    private async Task LoginButton()
+
+    void DeleteAuthor(ApplicationUser author)
     {
-        //Nav.NavigateTo("/forum");
-        
+        users.Remove(author);
+        UserService.DeleteAuthor(author);
     }
+  
 }

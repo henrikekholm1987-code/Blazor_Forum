@@ -12,12 +12,15 @@ public class UserService
     {
         _dbContext = dbContext;
     }
+    public List<ApplicationUser> GetAllUsers()
+    {
+        return _dbContext.ApplicationUsers.ToList();
+    }
 
     public ApplicationUser CreateUser(string username, string password)
     {
         var user = new ApplicationUser()
         {
-            
             UserName = username,
             Password = password
         };
@@ -27,11 +30,14 @@ public class UserService
 
         return user;
     }
-    
-    public List<ApplicationUser> GetAllUsers()
+
+    public void DeleteAuthor(ApplicationUser user)
     {
-        return _dbContext.ApplicationUsers.ToList();
+        Console.WriteLine(user.UserName);
+        _dbContext.Remove(user);
+        _dbContext.SaveChanges();
     }
+   
 
     // public ApplicationUser? Login(string username, string password)
     // {
@@ -40,5 +46,6 @@ public class UserService
     //              u.Password == password
     //     );
     // }
+    
 }
 

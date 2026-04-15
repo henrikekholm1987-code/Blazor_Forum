@@ -1,5 +1,15 @@
 ﻿namespace Entities;
 
+public class ApplicationUser 
+{
+    public int ApplicationUserId { get; set; }
+    public string UserName { get; set; }
+    public string Password { get; set; }
+    
+    public List<ThreadItem> Threads { get; set; } = new();
+    public List<Comment> Comments { get; set; } = new();
+}
+
 public class ThreadItem
 {
     public int ThreadId { get; set; }
@@ -12,15 +22,6 @@ public class ThreadItem
     public List<Comment> Comments { get; set; } = new();
 }
 
-public class ApplicationUser 
-{
-    public int ApplicationUserId { get; set; }
-    public string UserName { get; set; }
-    public string Password { get; set; }
-    // public List<ThreadItem> Threads { get; set; } = new();
-    // public List<Comment> Comments { get; set; } = new();
-}
-
 public class Comment
 {
     public int CommentId { get; set; }
@@ -31,7 +32,7 @@ public class Comment
     
     public ApplicationUser Author { get; set; } = null!;
 
-    // public int ThreadItemId { get; set; }
-    // public ThreadItem ThreadItem { get; set; } = null!;
+    public int ThreadItemId { get; set; }
+    public ThreadItem ThreadItem { get; set; } = null!;
 }
 
