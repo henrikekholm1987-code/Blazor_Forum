@@ -14,7 +14,7 @@
 }
 
 
-.admin_home-wrapper {
+.admin-wrapper.home-wrapper {
     font-family: 'Courier New', Courier, monospace;
     max-width: 480px;
     margin: 2rem auto;
@@ -28,6 +28,7 @@
     color: #811250;
     margin-bottom: 1rem;
 }
+
 
 .admin-wrapper .cb-card {
     border: 1px solid #2e2e2b;

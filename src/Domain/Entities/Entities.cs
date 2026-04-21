@@ -6,8 +6,9 @@ public class ApplicationUser
     public string UserName { get; set; }
     public string Password { get; set; }
     
-    public List<ThreadItem> Threads { get; set; } = new();
     public List<Comment> Comments { get; set; } = new();
+    
+    public List<ThreadItem> Threads { get; set; } = new();
 }
 
 public class ThreadItem
