@@ -1,3 +1,17 @@
+.main-center {
+    display: flex;
+    justify-content: center;   /* horizontal center */
+    align-items: flex-start;   /* keep it near top (not vertical center) */
+    min-height: 100vh;
+}
+
+.content {
+    width: 100%;
+    max-width: 600px;          /* controls how wide your UI is */
+    padding: 2rem;
+}
+
+
 /* Kort / panel */
 .cb-card {
     background: #f5f4f0;
@@ -18,7 +32,7 @@
 /* Inputfält */
 .cb-field-group {
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     gap: 10px;
     margin-bottom: 10px;
 }

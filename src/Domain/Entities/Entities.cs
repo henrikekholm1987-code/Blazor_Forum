@@ -30,9 +30,8 @@ public class Comment
     public int AuthorId { get; set; }
 
     public DateTime CreatedAt { get; set; }
-    
     public ApplicationUser Author { get; set; } = null!;
-
+    
     public int ThreadItemId { get; set; }
     public ThreadItem ThreadItem { get; set; } = null!;
 }

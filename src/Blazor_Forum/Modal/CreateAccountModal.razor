@@ -81,8 +81,11 @@
     {
         // 1. Kolla att Password == ConfirmPassword
         // 2. Anropa din service
-        UserService.CreateUser(Username, Password);
         // 3. Navigera eller visa bekräftelse
+        
+        UserService.CreateUser(Username, Password);
+        Close();
+        
     }
 
     public void Dispose()

@@ -8,24 +8,35 @@
 @inject UserService UserService
 
 
-<div class="admin_home-wrapper">
-    <h1 class="home-title">Dashboard</h1>
-    
-    <div class="cb-card">
-        <div class="cb-card-header">
+<main class="home-wrapper">
+    <header>
+        <h1 class="home-title">Dashboard</h1>
+    </header>
+
+    <section class="cb-card">
+
+        <header class="cb-card-header">
             <span class="cb-keyword">applications</span>
-            
+        </header>
+
+        <ul class="cb-list">
+
             @foreach (var appuser in users)
             {
-                <div class="cb-thread" @onclick="() => OpenAuthor(appuser)">
+                <li class="cb-thread" @onclick="() => OpenAuthor(appuser)">
                     <span class="cb-keyword">ApplicationUser</span>
                     <span class="cb-thread-title">@appuser.UserName</span>
-                    <span class="cb-modal-close" @onclick="() => DeleteAuthor(appuser)">✕</span>
-                </div>
+                    <button class="cb-modal-close"
+                            @onclick="() => DeleteAuthor(appuser)">✕
+                    </button>
+                </li>
             }
-        </div>
-    </div>
-</div>
+
+        </ul>
+
+    </section>
+
+</main>
 
 @code 
 {

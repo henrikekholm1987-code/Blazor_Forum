@@ -1,3 +1,4 @@
+using Application.Services;
 using Application.Users;
 using Blazor_Forum;
 using Infrastructure.Persistence;
@@ -18,6 +19,12 @@ builder.Services.AddScoped<UserService>();
 builder.Services.AddAuthentication();
 builder.Services.AddAuthorization();
 builder.Services.AddCascadingAuthenticationState(); 
+
+builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+    .AddCookie(options => { options.LoginPath = "/forum"; });
+
+builder.Services.AddHttpContextAccessor();
+builder.Services.AddScoped<LoginService>();
 
 var app = builder.Build();
 

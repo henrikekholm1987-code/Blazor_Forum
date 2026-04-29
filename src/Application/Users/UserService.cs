@@ -5,8 +5,6 @@ namespace Application.Users;
 
 public class UserService
 {
-    // private List<ApplicationUser> users = new();
-    
     ApplicationDbContext _dbContext;
     public UserService(ApplicationDbContext dbContext)
     {

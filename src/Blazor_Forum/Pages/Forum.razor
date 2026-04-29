@@ -111,19 +111,21 @@
                 {
                     <p class="modal-empty">No comments yet. Be the first.</p>
                 }
-                <!--@foreach (var comment in ActiveThread.Comments)
+               @foreach (var comment in ActiveThread.Comments)
                 {
                     <div class="modal-comment">
                         <div class="comment-meta">
                             <div class="comment-avatar">
-                                @GetInitials(comment.AuthorId)
+                                <!-- @GetInitials(comment.AuthorId)-->
+                                
+                                
                             </div>
                             <span class="comment-author">@comment.AuthorId</span>
                             <span class="comment-date">@comment.CreatedAt.ToString("yyyy-MM-dd HH:mm")</span>
                         </div>
                         <p class="comment-body">@comment.Content</p>
                     </div>
-                } -->
+                }
             </div>
 
             <div class="modal-compose">
