@@ -1,6 +1,5 @@
 @using Application.Users
 @using Entities
-
 @inject CreateAccountModalState ModalState
 @inject UserService UserService
 
@@ -11,23 +10,19 @@
 
             <div class="modal-header">
                 <span class="cb-keyword">create account</span>
-
                 <button class="modal-close" @onclick="Close">
                     &times
                 </button>
             </div>
 
             <div class="modal-compose">
-                
                 <input class="compose-name"
                        placeholder="username"
                        @bind="Username" />
-
                 <input class="compose-name"
                        type="password"
                        placeholder="password"
                        @bind="Password" />
-
                 <input class="compose-name"
                        type="password"
                        placeholder="confirm password"
@@ -36,9 +31,7 @@
                 <button class="cb-btn cb-btn-primary"
                         @onclick="Submit"
                         disabled="@IsDisabled">
-
                     create account
-
                 </button>
 
             </div>
@@ -70,7 +63,6 @@
         Visible = true;
         StateHasChanged();
     }
-
     void Close()
     {
         Visible = false;

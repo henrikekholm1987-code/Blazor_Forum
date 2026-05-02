@@ -17,13 +17,15 @@
     </ItemGroup>
 
     <ItemGroup>
-        <Folder Include="Components\" />
-    </ItemGroup>
-
-    <ItemGroup>
       <AdditionalFiles Include="App.razor" />
       <AdditionalFiles Include="Routes.razor" />
       <AdditionalFiles Include="_Imports.razor" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Update="Components\UserHomePage.razor.css">
+        <DependentUpon>UserHomePage.razor.razor</DependentUpon>
+      </None>
     </ItemGroup>
 
 </Project>

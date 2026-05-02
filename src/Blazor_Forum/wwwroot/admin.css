@@ -14,13 +14,6 @@
 }
 
 
-.admin_home-wrapper {
-    font-family: 'Courier New', Courier, monospace;
-    max-width: 480px;
-    margin: 2rem auto;
-    padding: 1.5rem;
-}
-
 .admin-wrapper .home-title {
     font-family: Georgia, serif;
     font-size: 28px;

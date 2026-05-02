@@ -5,13 +5,31 @@
     min-height: 100vh;
 }
 
+
+.page {
+    display: flex;
+    justify-content: center;
+}
+
+.page > * {
+    max-width: 1000px;
+    width: 100%;
+}
+.page {
+    display: flex;
+    justify-content: center;
+}
+
+/* THIS is what you're missing */
+main {
+    max-width: 800px;
+    width: 100%;
+}
 .content {
     width: 100%;
     max-width: 600px;          /* controls how wide your UI is */
     padding: 2rem;
 }
-
-
 /* Kort / panel */
 .cb-card {
     background: #f5f4f0;
@@ -95,11 +113,6 @@
 
 .cb-keyword {
     font-weight: 700;
-}
-.cd-modal-close
-{
-    margin-left: auto;
-    cursor: pointer;   
 }
 
 .cb-string {
