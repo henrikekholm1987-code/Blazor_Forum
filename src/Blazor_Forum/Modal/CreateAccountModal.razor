@@ -2,33 +2,38 @@
 @using Entities
 @inject CreateAccountModalState ModalState
 @inject UserService UserService
+@implements IDisposable
 
 @if (Visible)
 {
-    <div class="modal-backdrop" @onclick="Close">
-        <div class="modal-box" @onclick:stopPropagation="true">
+    <div class="create-account-modal-backdrop" @onclick="Close">
+        <div class="create-account-modal-dialog"
+             role="dialog"
+             aria-modal="true"
+             aria-labelledby="create-account-title"
+             @onclick:stopPropagation="true">
 
-            <div class="modal-header">
-                <span class="cb-keyword">create account</span>
-                <button class="modal-close" @onclick="Close">
-                    &times
+            <div class="create-account-modal-header">
+                <span id="create-account-title" class="cb-keyword">create account</span>
+                <button class="create-account-modal-close" type="button" @onclick="Close" aria-label="Close create account modal">
+                    &times;
                 </button>
             </div>
 
-            <div class="modal-compose">
-                <input class="compose-name"
+            <div class="create-account-modal-body">
+                <input class="create-account-input"
                        placeholder="username"
                        @bind="Username" />
-                <input class="compose-name"
+                <input class="create-account-input"
                        type="password"
                        placeholder="password"
                        @bind="Password" />
-                <input class="compose-name"
+                <input class="create-account-input"
                        type="password"
                        placeholder="confirm password"
                        @bind="ConfirmPassword" />
 
-                <button class="cb-btn cb-btn-primary"
+                <button class="cb-btn cb-btn-primary create-account-submit"
                         @onclick="Submit"
                         disabled="@IsDisabled">
                     create account

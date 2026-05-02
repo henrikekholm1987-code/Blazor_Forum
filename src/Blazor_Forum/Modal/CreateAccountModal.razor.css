@@ -1,0 +1,72 @@
+.create-account-modal-backdrop {
+    position: fixed;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+    background: rgba(0, 0, 0, 0.55);
+    z-index: 2000;
+}
+
+.create-account-modal-dialog {
+    width: 100%;
+    max-width: 420px;
+    background: #f5f4f0;
+    border: 1px solid #d7d4c9;
+    border-radius: 12px;
+    box-shadow: 0 12px 34px rgba(0, 0, 0, 0.28);
+    overflow: hidden;
+}
+
+.create-account-modal-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 14px;
+    border-bottom: 1px solid #ddd8c8;
+}
+
+.create-account-modal-close {
+    border: none;
+    background: transparent;
+    font-size: 22px;
+    line-height: 1;
+    cursor: pointer;
+    color: #555;
+    padding: 0 4px;
+}
+
+.create-account-modal-close:hover {
+    color: #111;
+}
+
+.create-account-modal-body {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 14px;
+}
+
+.create-account-input {
+    width: 100%;
+    box-sizing: border-box;
+    border: 1px solid #b4b2a9;
+    border-radius: 8px;
+    padding: 9px 10px;
+    font-family: inherit;
+    font-size: 14px;
+    color: #2c2c2a;
+    background: #fff;
+}
+
+.create-account-input:focus {
+    outline: none;
+    border-color: #555;
+    box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.1);
+}
+
+.create-account-submit {
+    margin-top: 6px;
+    align-self: flex-start;
+}

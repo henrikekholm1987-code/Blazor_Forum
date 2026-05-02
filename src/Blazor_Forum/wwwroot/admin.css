@@ -1,35 +1,59 @@
-
-
 .admin-wrapper {
     background-color: #0d0d0c;
     min-height: 100vh;
     margin: 0;
     padding: 0;
+    color: #d8d3c7;
 }
 
 .admin-content {
     background-color: #0d0d0c;
-    padding: 0;
+    padding: 2rem 1.5rem;
     margin: 0;
 }
 
+
+.admin-wrapper .home-wrapper {
+    font-family: 'Courier New', Courier, monospace;
+    max-width: 480px;
+    margin: 0 auto;
+    padding: 0;
+}
 
 .admin-wrapper .home-title {
     font-family: Georgia, serif;
     font-size: 28px;
     font-weight: normal;
-    color: #811250;
+    color: #c9b99a;
     margin-bottom: 1rem;
 }
 
+.admin-wrapper .home-subtitle {
+    font-family: Georgia, serif;
+    font-size: 14px;
+    color: #9d9688;
+}
+
 .admin-wrapper .cb-card {
+    background: #161614;
     border: 1px solid #2e2e2b;
-    padding: 0;
+    border-radius: 12px;
+    padding: 1.25rem;
 }
 
 .admin-wrapper .cb-card-header {
-    padding: 1.25rem;
+    font-size: 15px;
+    font-weight: 700;
+    color: #d8d3c7;
+    margin-bottom: 1rem;
     border-bottom: 1px solid #2e2e2b;
+    padding-bottom: 8px;
+}
+
+.admin-wrapper .cb-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
 }
 
 .admin-wrapper .cb-thread {
@@ -57,4 +81,18 @@
     margin-left: 6px;
     color: #c9b99a;
     font-size: 14px;
+}
+
+.admin-wrapper .cb-modal-close {
+    margin-left: auto;
+    border: none;
+    background: transparent;
+    color: #9d9688;
+    cursor: pointer;
+    font-size: 16px;
+    line-height: 1;
+}
+
+.admin-wrapper .cb-modal-close:hover {
+    color: #d8d3c7;
 }
