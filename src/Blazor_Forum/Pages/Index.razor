@@ -1,7 +1,9 @@
 @page "/"
 
+@using Application.Auth
 @using Blazor_Forum.Modal
 @inject CreateAccountModalState ModalState
+@inject NavigationManager NavigationManager
 
 <div class="home-wrapper">
     <h1 class="home-title">Blazor Forum</h1>
@@ -24,7 +26,8 @@
 
         <div class="cb-field-group">
             <label class="cb-label">username:</label>
-            <input class="cb-input" type="text" placeholder="your username" />
+            <!-- <input class="cb-input" type="text" placeholder="your username" /> -->
+            <input class="cb-input" @bind = "username" />
         </div>
 
         <div class="cb-field-group">
@@ -60,10 +63,20 @@
 
 @code 
 {
-    [Inject] NavigationManager? Nav { get; set; }
-    private async Task LoginButton()
+    [Inject] AuthService authServices { get; set; }
+    
+    string username = "";
+    
+    private async Task LoginButton() 
     {
-        Nav.NavigateTo("/forum");
+        var success = await authServices.Login(username);
+        
+        if (success)
+        {
+            NavigationManager.NavigateTo("/forum"); 
+        }
     }
+    
+    
     void OpenRegisterModal() => ModalState.Show();
 }

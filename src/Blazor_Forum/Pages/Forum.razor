@@ -1,10 +1,19 @@
-﻿@using Entities
+﻿@using Application.Auth
+@using Entities
 @page "/forum"
 
 <PageTitle>Forum</PageTitle>
 
 <div class="home-wrapper">
+    
+    <p class="home-subtitle">
+        
+        ApplicationUser.Name
 
+ 
+        
+    </p>
+    
     <h1 class="home-title">Forum</h1>
     <p class="home-subtitle">
         The discussions listed below are arranged in no particular order.
@@ -117,8 +126,6 @@
                         <div class="comment-meta">
                             <div class="comment-avatar">
                                 <!-- @GetInitials(comment.AuthorId)-->
-                                
-                                
                             </div>
                             <span class="comment-author">@comment.AuthorId</span>
                             <span class="comment-date">@comment.CreatedAt.ToString("yyyy-MM-dd HH:mm")</span>
@@ -159,6 +166,8 @@
     ThreadItem? ActiveThread;
     
     bool creationOfThread;
+    
+    
     
     string NewThreadTitle = "";
     string NewThreadContent = "";

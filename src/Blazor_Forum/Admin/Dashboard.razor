@@ -39,7 +39,7 @@
 
 @code 
 {
-    ApplicationUser _author {get; set;} // @attribute [Authorize(Roles = "Admin")]
+    public required ApplicationUser applicationUser {get; set;} // @attribute [Authorize(Roles = "Admin")]
     
     private List <ApplicationUser> users = new();
     
