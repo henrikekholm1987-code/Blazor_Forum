@@ -1,14 +1,17 @@
 @page "/"
 
 @using Application.Auth
+
 @using Blazor_Forum.Modal
 @inject CreateAccountModalState ModalState
 @inject NavigationManager NavigationManager
 
+
 <div class="home-wrapper">
     <h1 class="home-title">Blazor Forum</h1>
     
-    <p class="home-subtitle"> 
+    <p class="home-subtitle">
+        
         The content posted on this forum is the responsibility of the individuals involved.
         Out of respect for common sense, the details are left unchanged.
 
@@ -16,9 +19,10 @@
         No one has objected so far.
 
         By creating an account, you agree to receive essential service messages.
-        We expect everything to go just fine.</p> 
+        We expect everything to go just fine.
 
-    <!-- Login -->
+    </p> 
+    
     <div class="cb-card">
         <div class="cb-card-header">
             <span class="cb-keyword">login</span>
@@ -26,8 +30,7 @@
 
         <div class="cb-field-group">
             <label class="cb-label">username:</label>
-            <!-- <input class="cb-input" type="text" placeholder="your username" /> -->
-            <input class="cb-input" @bind = "username" />
+            <input class="cb-input" type="text" placeholder="your username" @bind = "username" />
         </div>
 
         <div class="cb-field-group">
@@ -76,7 +79,6 @@
             NavigationManager.NavigateTo("/forum"); 
         }
     }
-    
     
     void OpenRegisterModal() => ModalState.Show();
 }

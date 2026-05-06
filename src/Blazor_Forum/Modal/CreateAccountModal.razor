@@ -1,5 +1,4 @@
 @using Application.Users
-@using Entities
 @inject CreateAccountModalState ModalState
 @inject UserService UserService
 @implements IDisposable
@@ -15,8 +14,8 @@
 
             <div class="create-account-modal-header">
                 <span id="create-account-title" class="cb-keyword">create account</span>
-                <button class="create-account-modal-close" type="button" @onclick="Close" aria-label="Close create account modal">
-                    &times;
+                <button class="create-account-modal-close" type="button" 
+                        @onclick="Close" aria-label="Close create account modal"> &times;
                 </button>
             </div>
 
@@ -38,22 +37,20 @@
                         disabled="@IsDisabled">
                     create account
                 </button>
-
             </div>
         </div>
     </div>
 }
+
 @code 
 {
-    ApplicationUser _applicationUser = new ApplicationUser();
-
+    
     string Username = "";
     string Password = "";
     string ConfirmPassword = "";
 
     bool IsDisabled =>
-        string.IsNullOrWhiteSpace(Password)
-        || Password != ConfirmPassword;
+        string.IsNullOrWhiteSpace(Password) || Password != ConfirmPassword;
 
     public bool Visible { get; private set; }
 

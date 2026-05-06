@@ -1,6 +1,7 @@
 ﻿@using Application.Auth
 @using Entities
 @page "/forum"
+@inject AuthService AuthServices
 
 <PageTitle>Forum</PageTitle>
 
@@ -9,9 +10,7 @@
     <p class="home-subtitle">
         
         ApplicationUser.Name
-
- 
-        
+        @AuthServices.CurrentUser.UserName;
     </p>
     
     <h1 class="home-title">Forum</h1>
@@ -116,11 +115,12 @@
             </div>
 
             <div class="modal-comments">
+                
                 @if (!ActiveThread.Comments.Any())
                 {
                     <p class="modal-empty">No comments yet. Be the first.</p>
                 }
-               @foreach (var comment in ActiveThread.Comments)
+                @foreach (var comment in ActiveThread.Comments)
                 {
                     <div class="modal-comment">
                         <div class="comment-meta">
@@ -166,8 +166,6 @@
     ThreadItem? ActiveThread;
     
     bool creationOfThread;
-    
-    
     
     string NewThreadTitle = "";
     string NewThreadContent = "";
@@ -239,7 +237,6 @@
 
         ActiveThread.Comments.Add(new Comment
         {
-           
             Content = NewCommentText.Trim(),
             CreatedAt = DateTime.Now
         });
