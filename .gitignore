@@ -1,5 +1,21 @@
+# Build folders
 bin/
 obj/
-/packages/
-riderModule.iml
-/_ReSharper.Caches/*.db
+
+# Rider / IntelliJ
+.idea/
+
+# User-specific settings
+*.user
+*.suo
+*.DotSettings.user
+
+# macOS
+.DS_Store
+
+# SQLite temp files
+*.db-shm
+*.db-wal
+
+# Logs
+*.log
