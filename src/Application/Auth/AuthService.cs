@@ -5,43 +5,23 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Application.Auth;
 
-// public class AuthService: IAuthService
-// {
-//     // private readonly SignInManager<ApplicationUser> _signInManager;
-//     private readonly UserManager<ApplicationUser> _userManager;
-//
-//     public AuthService(UserManager<ApplicationUser> userManager)
-//     {
-//         _userManager = userManager;
-//     }
-//     
-//     public Task<bool> Login(string username)
-//     {
-//         throw new NotImplementedException();
-//     }
-// }
-//
-// public interface IAuthService
-// {
-//     Task<bool> Login(string username);  
-// }
-//
 
-public class AuthService
+public class AuthService(ApplicationDbContext dbContext)
 {
     private ApplicationUser? _currentUser;
     public ApplicationUser? CurrentUser => _currentUser;
-    
-    private readonly ApplicationDbContext _dbContext;
-    public AuthService(ApplicationDbContext _dbContext)
-    {
-        this._dbContext = _dbContext;
-    }
 
-    public async Task<bool> Login(string username) //, string password)
+    public async Task<bool> Login(string username, string password)
     {
-        var user = await _dbContext.ApplicationUsers
-           .FirstOrDefaultAsync(u => u.UserName == username);
+        var normalizedUsername = username.Trim();
+        var normalizedPassword = password.Trim();
+        if (string.IsNullOrWhiteSpace(normalizedUsername) || string.IsNullOrWhiteSpace(normalizedPassword))
+        {
+            return false;
+        }
+
+        var user = await dbContext.ApplicationUsers
+           .FirstOrDefaultAsync(u => u.UserName == normalizedUsername && u.PasswordHash == normalizedPassword);
         
         if (user == null) return false;
         
@@ -53,9 +33,5 @@ public class AuthService
     {
         _currentUser = null;
     }
-
-    // private bool VerifyPassword(string password, string hash)
-    // {
-    //     return BCrypt.Net.BCrypt.Verify(password, hash);
-    // }
 }
+

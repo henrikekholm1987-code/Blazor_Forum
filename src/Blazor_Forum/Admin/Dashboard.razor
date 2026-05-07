@@ -1,10 +1,10 @@
-@page "/dashboard"
+@page "/dash"
 
-@using Application.Users
+@using Application.ServiceLocator
 @using Entities
 @layout Layout.AdminLayout
 
-@inject UserService UserService
+@inject ApplicationUserService ApplicationUserService
 
 <main class="home-wrapper">
     <header>
@@ -29,11 +29,8 @@
                     </button>
                 </li>
             }
-
         </ul>
-
     </section>
-
 </main>
 
 @code 
@@ -44,7 +41,7 @@
     
     protected override void OnInitialized()
     {
-        users = UserService.GetAllUsers();
+        users = ApplicationUserService.GetAllUsers();
     }
 
     void OpenAuthor(ApplicationUser author)
@@ -55,7 +52,7 @@
     void DeleteAuthor(ApplicationUser author)
     {
         users.Remove(author);
-        UserService.DeleteAuthor(author);
+        ApplicationUserService.DeleteAuthor(author);
     }
   
 }

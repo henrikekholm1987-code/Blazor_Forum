@@ -1,8 +1,7 @@
 @page "/"
-
 @using Application.Auth
-
 @using Blazor_Forum.Modal
+
 @inject CreateAccountModalState ModalState
 @inject NavigationManager NavigationManager
 
@@ -35,7 +34,7 @@
 
         <div class="cb-field-group">
             <label class="cb-label">password:</label>
-            <input class="cb-input" type="password" placeholder="••••••••" />
+            <input class="cb-input" type="password" placeholder="••••••••" @bind="password" />
         </div>
 
         <div class="cb-actions">
@@ -69,16 +68,27 @@
     [Inject] AuthService authServices { get; set; }
     
     string username = "";
+    string password = "";
     
     private async Task LoginButton() 
     {
-        var success = await authServices.Login(username);
+        var success = await authServices.Login(username, password);
         
         if (success)
         {
             NavigationManager.NavigateTo("/forum"); 
         }
+        
+        // await UserService.CreateUserAsync(new CreateUserRequest
+        // {
+        //     Username = Username,
+        //     Password = Password,
+        //     ConfirmPassword = ConfirmPassword
+        // });
+        
     }
+    
+    
     
     void OpenRegisterModal() => ModalState.Show();
 }

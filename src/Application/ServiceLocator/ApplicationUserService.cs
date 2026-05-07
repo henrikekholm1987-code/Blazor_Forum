@@ -3,7 +3,7 @@ using Infrastructure.Persistence;
 
 namespace Application.ServiceLocator;
 
-public class UserService(ApplicationDbContext dbContext)
+public class ApplicationUserService(ApplicationDbContext dbContext)
 {
     public List<ApplicationUser> GetAllUsers()
     {

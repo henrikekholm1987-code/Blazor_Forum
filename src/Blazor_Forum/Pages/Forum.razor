@@ -1,15 +1,16 @@
-﻿@using Application.Auth
-@using Entities
-@page "/forum"
+﻿@page "/forum"
 @inject AuthService AuthServices
+@using Application.Auth
+@using Application.ServiceLocator
+@using Entities
+
+@inject ThreadServices ThreadServices
 
 <PageTitle>Forum</PageTitle>
 
 <div class="home-wrapper">
-    
     <p class="home-subtitle">
-        
-        ApplicationUser.Name
+        ApplicationUser.Name:
         @AuthServices.CurrentUser.UserName;
     </p>
     
@@ -27,6 +28,15 @@
         </div>
 
         <div class="threads-carousel">
+            
+            <!-- @foreach (var thread in Threads)
+            {
+                <div class="cb-thread" @onclick="() => OpenThread(thread)">
+                    <span class="cb-keyword">topic:</span>
+                    <span class="cb-thread-title">@thread.Title</span>
+                </div>
+            }-->
+
             @foreach (var thread in Threads)
             {
                 <div class="cb-thread" @onclick="() => OpenThread(thread)">
@@ -34,9 +44,11 @@
                     <span class="cb-thread-title">@thread.Title</span>
                 </div>
             }
+            
         </div>
 
         <div class="cb-actions">
+            <!-- <button class="cb-btn cb-btn-primary" @onclick="CreateThread"> -->
             <button class="cb-btn cb-btn-primary" @onclick="CreateThread">
                 &#9654; new thread
             </button>
@@ -59,7 +71,6 @@
             </div>
         </div>
     </div>
-
 </div>
 
 @if (creationOfThread is true)
@@ -125,7 +136,9 @@
                     <div class="modal-comment">
                         <div class="comment-meta">
                             <div class="comment-avatar">
+                                
                                 <!-- @GetInitials(comment.AuthorId)-->
+
                             </div>
                             <span class="comment-author">@comment.AuthorId</span>
                             <span class="comment-date">@comment.CreatedAt.ToString("yyyy-MM-dd HH:mm")</span>
@@ -158,12 +171,23 @@
     </div>
 }
 
+
+
 @code {
 
     [Inject]
     NavigationManager Nav { get; set; }
     
     ThreadItem? ActiveThread;
+    
+    // private List<ThreadItem> threads = new();
+    
+    // protected override void OnInitialized()
+    // {
+    //     threads  = ThreadServices.GetAllThreads();
+    // }
+    
+    
     
     bool creationOfThread;
     
@@ -180,13 +204,27 @@
     bool IsThreadPostDisabled =>
         string.IsNullOrWhiteSpace(NewThreadTitle) ||
         string.IsNullOrWhiteSpace(NewThreadContent);
+    
+    
+    #region newWay
 
+    // void OnCreateNewThread()
+    // {
+    //     Console.WriteLine("OnCreateNewThread");
+    //     // ThreadCreation.sShow();
+    // } 
+    
+    #endregion
+
+    #region OldWay
+    
     List<ThreadItem> Threads = new()
     {
         new() { ThreadId = 1, Title = "Welcome to the forum" },
         new() { ThreadId = 2, Title = "Books worth reading this year" },
         new() { ThreadId = 3, Title = "Strange problems in programming" }
     };
+    
     void CreateThread()
     {
         NewThreadTitle = "";
@@ -216,12 +254,14 @@
         if (IsThreadPostDisabled) return;
 
         var nextThreadId = Threads.Count == 0 ? 1 : Threads.Max(t => t.ThreadId) + 1;
+        
         var newThread = new ThreadItem
         {
             ThreadId = nextThreadId,
             Title = NewThreadTitle.Trim(),
             ThreadContent = NewThreadContent.Trim(),
-            CreatedAt = DateTime.Now
+            CreatedAt = DateTime.Now,
+            Comments = new List<Comment>()
         };
 
         Threads.Insert(0, newThread);
@@ -252,4 +292,6 @@
             ? $"{parts[0][0]}{parts[^1][0]}".ToUpper()
             : name.Length >= 2 ? name[..2].ToUpper() : name.ToUpper();
     }
+    
+    #endregion
 }

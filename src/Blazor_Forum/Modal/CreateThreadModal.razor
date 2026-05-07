@@ -1,5 +1,78 @@
 <h3>CreateThreadModal</h3>
 
-@code {
+@if (creationOfThread)
+{
+    <div class="modal-backdrop" @onclick="DeleteThread">
+        <div class="modal-box" @onclick:stopPropagation="true">
+            <div>
+                <div class="modal-header">
+                    
+                    <span class="cb-keyword">topic:</span>
+                    
+                    <textarea class="compose-text"
+                      rows="2"
+                      @bind="NewThreadTitle">
+                    </textarea>
+                    
+                    <button class="modal-close" @onclick="DeleteThread">&times; </button>
+                    
+                </div>
+                <div class="modal-compose">
+                        
+                    <textarea class="compose-text"
+                              rows="2"
+                              placeholder="text of topic..."
+                              @bind="NewThreadContent">
+                    </textarea>
+
+                    <div class="compose-row">
+                        <button class="cb-btn cb-btn-primary"
+                                @onclick="PostThread"
+                                disabled="@IsThreadPostDisabled">
+                            &#9654; post thread
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@code
+
+{
+    string NewThreadTitle = "";
+    string NewThreadContent = "";
+    
+    bool IsThreadPostDisabled =>
+        string.IsNullOrWhiteSpace(NewThreadTitle) ||
+        string.IsNullOrWhiteSpace(NewThreadContent);
+
+    
+    bool creationOfThread = false;
+
+    void DeleteThread()
+    {
+        creationOfThread = true;
+    }
+
+    void PostThread()
+    {
+        creationOfThread = false;
+    }
+
+    void CreateThread()
+    {
+        NewThreadTitle = "";
+        NewThreadContent = "";
+        creationOfThread = true;
+    }
+
+ 
+    
+    void DeleteThreadModal()
+    {
+        
+    }
     
 }
