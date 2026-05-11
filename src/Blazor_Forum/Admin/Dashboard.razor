@@ -1,4 +1,4 @@
-@page "/dash"
+@page "/dashboard"
 
 @using Application.ServiceLocator
 @using Entities
@@ -19,13 +19,15 @@
 
         <ul class="cb-list">
 
-            @foreach (var appuser in users)
+            @foreach (var applicationUser in users)
             {
-                <li class="cb-thread" @onclick="() => OpenAuthor(appuser)">
+                <li class="cb-thread" @onclick="() => OpenAuthor(applicationUser
+                )">
                     <span class="cb-keyword">ApplicationUser</span>
-                    <span class="cb-thread-title">@appuser.UserName</span>
+                    <span class="cb-thread-title">@applicationUser.UserName</span>
+                    <span class="cb-thread-title">@applicationUser.Threads.Count.ToString()</span>
                     <button class="cb-modal-close"
-                            @onclick="() => DeleteAuthor(appuser)">✕
+                            @onclick="() => DeleteAuthor(applicationUser)">✕
                     </button>
                 </li>
             }
@@ -43,16 +45,26 @@
     {
         users = ApplicationUserService.GetAllUsers();
     }
-
-    void OpenAuthor(ApplicationUser author)
+    
+    void OpenAuthorThread(ApplicationUser applicationUser)
     {
-        author.ApplicationUserId = author.ApplicationUserId;
+        foreach (var thread in users)
+        {
+            Console.WriteLine(thread);
+            Console.WriteLine(applicationUser.Threads.Count.ToString());
+        }
     }
 
-    void DeleteAuthor(ApplicationUser author)
+    void OpenAuthor(ApplicationUser applicationUser)
     {
-        users.Remove(author);
-        ApplicationUserService.DeleteAuthor(author);
+        applicationUser.ApplicationUserId = applicationUser.ApplicationUserId;
+       OpenAuthorThread(applicationUser);
+    }
+
+    void DeleteAuthor(ApplicationUser applicationUser)
+    {
+        users.Remove(applicationUser);
+        ApplicationUserService.DeleteAuthor(applicationUser);
     }
   
 }

@@ -2,6 +2,7 @@
 @inject AuthService AuthServices
 @using Application.Auth
 @using Application.ServiceLocator
+@using Blazor_Forum.Modal
 @using Entities
 
 @inject ThreadServices ThreadServices
@@ -171,22 +172,20 @@
     </div>
 }
 
-
+<CreateThreadModal> </CreateThreadModal>
 
 @code {
 
-    [Inject]
-    NavigationManager Nav { get; set; }
+    [Inject] NavigationManager Nav { get; set; }
     
     ThreadItem? ActiveThread;
     
     // private List<ThreadItem> threads = new();
-    
+    //
     // protected override void OnInitialized()
     // {
     //     threads  = ThreadServices.GetAllThreads();
     // }
-    
     
     
     bool creationOfThread;

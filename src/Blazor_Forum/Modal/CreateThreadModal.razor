@@ -1,6 +1,8 @@
+@using Application.ServiceLocator
+@using Entities
 <h3>CreateThreadModal</h3>
 
-@if (creationOfThread)
+@if (CreationOfThread)
 {
     <div class="modal-backdrop" @onclick="DeleteThread">
         <div class="modal-box" @onclick:stopPropagation="true">
@@ -39,40 +41,34 @@
 }
 
 @code
-
 {
     string NewThreadTitle = "";
     string NewThreadContent = "";
     
+    public bool CreationOfThread { get; set; }
+    
     bool IsThreadPostDisabled =>
         string.IsNullOrWhiteSpace(NewThreadTitle) ||
         string.IsNullOrWhiteSpace(NewThreadContent);
-
     
-    bool creationOfThread = false;
 
     void DeleteThread()
     {
-        creationOfThread = true;
+        CreationOfThread = true;
     }
 
     void PostThread()
     {
-        creationOfThread = false;
+        CreationOfThread = false;
+       // ThreadServices.AddThread( NewThreadTitle, NewThreadContent, CreationOfThread);
     }
 
     void CreateThread()
     {
+        
         NewThreadTitle = "";
         NewThreadContent = "";
-        creationOfThread = true;
-    }
-
- 
-    
-    void DeleteThreadModal()
-    {
-        
+        CreationOfThread = true;
     }
     
 }

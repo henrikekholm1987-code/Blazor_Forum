@@ -74,13 +74,8 @@
 
     private void Submit()
     {
-        // 1. Kolla att Password == ConfirmPassword
-        // 2. Anropa din service
-        // 3. Navigera eller visa bekräftelse
-        
         UserService.CreateUser(Username.Trim(), Password.Trim());
         Close();
-        
     }
 
     public void Dispose()
