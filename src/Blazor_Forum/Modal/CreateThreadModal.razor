@@ -1,6 +1,7 @@
 @using Application.ServiceLocator
 @using Entities
-<h3>CreateThreadModal</h3>
+
+@inject Forum Forum;
 
 @if (CreationOfThread)
 {
@@ -51,24 +52,29 @@
         string.IsNullOrWhiteSpace(NewThreadTitle) ||
         string.IsNullOrWhiteSpace(NewThreadContent);
     
+    // protected override async Task OnInitializedAsync()
 
+    protected override void OnInitialized()
+    {
+        Forum.OnCreateThreadItem += CreateThread;
+    }
     void DeleteThread()
     {
-        CreationOfThread = true;
+      
     }
 
     void PostThread()
     {
-        CreationOfThread = false;
-       // ThreadServices.AddThread( NewThreadTitle, NewThreadContent, CreationOfThread);
+       
     }
 
     void CreateThread()
     {
-        
+        Console.WriteLine("Creating thread");
+        CreationOfThread = true;
         NewThreadTitle = "";
         NewThreadContent = "";
-        CreationOfThread = true;
+        
     }
     
 }

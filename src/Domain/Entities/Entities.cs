@@ -21,9 +21,9 @@ public class Comment
     public DateTime CreatedAt { get; set; }
     public DateTime? UpdatedAt { get; set; }
 
-    public int AuthorId { get; set; }
-    public ApplicationUser Author { get; set; } = null!;
+    //public int AuthorId { get; set; }
+    public ApplicationUser ApplicationUser { get; set; } = null!;
 
-    public int ThreadItemId { get; set; }
+    // public int ThreadItemId { get; set; }
     public ThreadItem ThreadItem { get; set; } = null!;
 }

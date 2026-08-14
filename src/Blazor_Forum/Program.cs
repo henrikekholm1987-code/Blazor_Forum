@@ -13,12 +13,13 @@ builder.Services.AddRazorComponents()
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
 builder.Services.AddScoped<CreateAccountModalState>();
-
- builder.Services.AddScoped<ApplicationUserService>();
-
+builder.Services.AddSingleton<CreateAccountModalState>();
+builder.Services.AddScoped<ApplicationUserService>();
+ 
 builder.Services.AddAuthentication();
 builder.Services.AddAuthorization();
 builder.Services.AddCascadingAuthenticationState(); 
+
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
     .AddCookie(options => { options.LoginPath = "/forum"; });
 

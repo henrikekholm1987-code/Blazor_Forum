@@ -1,8 +1,8 @@
 ﻿@page "/forum"
 @inject AuthService AuthServices
+
 @using Application.Auth
 @using Application.ServiceLocator
-@using Blazor_Forum.Modal
 @using Entities
 
 @inject ThreadServices ThreadServices
@@ -38,7 +38,7 @@
                 </div>
             }-->
 
-            @foreach (var thread in Threads)
+            @foreach (var thread in ActiveThreads)
             {
                 <div class="cb-thread" @onclick="() => OpenThread(thread)">
                     <span class="cb-keyword">topic:</span>
@@ -51,6 +51,10 @@
         <div class="cb-actions">
             <!-- <button class="cb-btn cb-btn-primary" @onclick="CreateThread"> -->
             <button class="cb-btn cb-btn-primary" @onclick="CreateThread">
+                &#9654; new thread
+            </button>
+            
+            <button class="cb-btn cb-btn-primary" @onclick="CreateThreadItem">
                 &#9654; new thread
             </button>
         </div>
@@ -141,7 +145,7 @@
                                 <!-- @GetInitials(comment.AuthorId)-->
 
                             </div>
-                            <span class="comment-author">@comment.AuthorId</span>
+                            <span class="comment-author">@comment.ApplicationUser</span>
                             <span class="comment-date">@comment.CreatedAt.ToString("yyyy-MM-dd HH:mm")</span>
                         </div>
                         <p class="comment-body">@comment.Content</p>
@@ -172,7 +176,7 @@
     </div>
 }
 
-<CreateThreadModal> </CreateThreadModal>
+
 
 @code {
 
@@ -180,14 +184,8 @@
     
     ThreadItem? ActiveThread;
     
-    // private List<ThreadItem> threads = new();
-    //
-    // protected override void OnInitialized()
-    // {
-    //     threads  = ThreadServices.GetAllThreads();
-    // }
     
-    
+    public Action OnCreateThreadItem;
     bool creationOfThread;
     
     string NewThreadTitle = "";
@@ -204,20 +202,16 @@
         string.IsNullOrWhiteSpace(NewThreadTitle) ||
         string.IsNullOrWhiteSpace(NewThreadContent);
     
-    
-    #region newWay
-
-    // void OnCreateNewThread()
+    // List<ThreadItem> ActiveThreads = new();
+    //
+    // protected override void OnInitialized()
     // {
-    //     Console.WriteLine("OnCreateNewThread");
-    //     // ThreadCreation.sShow();
-    // } 
-    
-    #endregion
+    //     ActiveThreads = ThreadServices.GetAllThreads();
+    // }
 
     #region OldWay
     
-    List<ThreadItem> Threads = new()
+    List<ThreadItem> ActiveThreads = new()
     {
         new() { ThreadId = 1, Title = "Welcome to the forum" },
         new() { ThreadId = 2, Title = "Books worth reading this year" },
@@ -229,6 +223,12 @@
         NewThreadTitle = "";
         NewThreadContent = "";
         creationOfThread = true;
+    }
+
+    void CreateThreadItem( ) //ThreadItem thread)
+    {
+        OnCreateThreadItem?.Invoke();
+       // ModalState.Show();
     }
 
     void DeleteThread()
@@ -247,12 +247,36 @@
     {
         ActiveThread = null;
     }
+    // void PostThread()
+    // {
+    //     if (IsThreadPostDisabled)
+    //         return;
+    //
+    //     var newThread = new ThreadItem
+    //     {
+    //         Title = NewThreadTitle.Trim(),
+    //         ThreadContent = NewThreadContent.Trim(),
+    //         CreatedAt = DateTime.Now,
+    //         Comments = new List<Comment>()
+    //     };
+    //
+    //     ThreadServices.CreateThread(newThread);
+    //
+    //     ActiveThreads = ThreadServices.GetAllThreads();
+    //
+    //     ActiveThread = newThread;
+    //
+    //     NewThreadTitle = "";
+    //     NewThreadContent = "";
+    //
+    //     creationOfThread = false;
+    // }
 
     void PostThread()
     {
         if (IsThreadPostDisabled) return;
-
-        var nextThreadId = Threads.Count == 0 ? 1 : Threads.Max(t => t.ThreadId) + 1;
+    
+        var nextThreadId = ActiveThreads.Count == 0 ? 1 : ActiveThreads.Max(t => t.ThreadId) + 1;
         
         var newThread = new ThreadItem
         {
@@ -262,8 +286,8 @@
             CreatedAt = DateTime.Now,
             Comments = new List<Comment>()
         };
-
-        Threads.Insert(0, newThread);
+    
+        ActiveThreads.Insert(0, newThread);
         ActiveThread = newThread;
         NewThreadTitle = "";
         NewThreadContent = "";

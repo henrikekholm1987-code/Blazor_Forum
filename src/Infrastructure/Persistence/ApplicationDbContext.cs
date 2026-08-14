@@ -30,9 +30,9 @@ public class  ApplicationDbContext : DbContext
             .HasKey(t => t.ThreadId);
 
         modelBuilder.Entity<ThreadItem>()
-            .HasOne(t => t.Author)
+            .HasOne(t => t.ApplicationUser)
             .WithMany(u => u.Threads)
-            .HasForeignKey(t => t.AuthorId)
+            //.HasForeignKey(t => t.AuthorId)
             .IsRequired()
             .OnDelete(DeleteBehavior.Restrict);
 
@@ -41,16 +41,16 @@ public class  ApplicationDbContext : DbContext
             .HasKey(c => c.CommentId);
 
         modelBuilder.Entity<Comment>()
-            .HasOne(c => c.Author)
+            .HasOne(c => c.ApplicationUser)
             .WithMany(u => u.Comments)
-            .HasForeignKey(c => c.AuthorId)
+            //.HasForeignKey(c => c.AuthorId)
             .IsRequired()
             .OnDelete(DeleteBehavior.Restrict);
 
         modelBuilder.Entity<Comment>()
             .HasOne(c => c.ThreadItem)
             .WithMany(t => t.Comments)
-            .HasForeignKey(c => c.ThreadItemId)
+            // .HasForeignKey(c => c.ThreadItemId)
             .IsRequired()
             .OnDelete(DeleteBehavior.Cascade);
     }
