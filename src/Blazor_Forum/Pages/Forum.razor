@@ -1,5 +1,6 @@
 ﻿@page "/forum"
 @inject AuthService AuthServices
+@inject ApplicationUserService UserService
 
 @using Application.Auth
 @using Application.ServiceLocator
@@ -94,22 +95,24 @@
                     </button>
                     
                 </div>
-                <div class="modal-compose">
-                        
-                    <textarea class="compose-text"
-                              rows="2"
-                              placeholder="text of topic..."
-                              @bind="NewThreadContent">
-                    </textarea>
 
-                    <div class="compose-row">
-                        <button class="cb-btn cb-btn-primary"
-                                @onclick="PostThread"
-                                disabled="@IsThreadPostDisabled">
-                            &#9654; post thread
-                        </button>
-                    </div>
-                </div>
+
+
+<div class="modal-compose">
+    <textarea class="compose-text"
+              rows="2"
+              placeholder="text of topic..."
+              @bind="NewThreadContent">
+    </textarea>
+    <div class="compose-row">
+        <button class="cb-btn cb-btn-primary"
+                @onclick="PostThread"
+                disabled="@IsThreadPostDisabled">
+            &#9654; post thread
+        </button>
+    </div>
+</div>
+
             </div>
         </div>
     </div>
@@ -143,7 +146,8 @@
                                 <!-- @GetInitials(comment.AuthorId)-->
 
                             </div>
-                            <span class="comment-author">@comment.ApplicationUser</span>
+                            
+                            <span class="comment-author">@comment.ApplicationUser?.UserName</span>
                             <span class="comment-date">@comment.CreatedAt.ToString("yyyy-MM-dd HH:mm")</span>
                         </div>
                         <p class="comment-body">@comment.Content</p>
@@ -151,25 +155,23 @@
                 }
             </div>
 
-            <div class="modal-compose">
-                <textarea class="compose-text"
-                          rows="2"
-                          placeholder="Add a comment..."
-                          @bind="NewCommentText">
-                </textarea>
-                <div class="compose-row">
-                    <input class="compose-name"
-                           type="text"
-                           placeholder="your name"
-                           @bind="NewCommentAuthor" />
-                    <button class="cb-btn cb-btn-primary"
-                            @onclick="PostComment"
-                            disabled="@IsCommentPostDisabled">
-                        &#9654; post comment
-                    </button>
-                </div>
-            </div>
+    
 
+            
+            <div class="modal-compose">
+    <textarea class="compose-text"
+              rows="2"
+              placeholder="Add a comment..."
+              @bind="NewCommentText">
+    </textarea>
+    <div class="compose-row">
+        <button class="cb-btn cb-btn-primary"
+                @onclick="PostComment"
+                disabled="@IsCommentPostDisabled">
+            &#9654; post comment
+        </button>
+    </div>
+</div>
         </div>
     </div>
 }
@@ -193,8 +195,8 @@
     string NewCommentAuthor = "";
 
     bool IsCommentPostDisabled =>
-        string.IsNullOrWhiteSpace(NewCommentText) ||
-        string.IsNullOrWhiteSpace(NewCommentAuthor);
+    string.IsNullOrWhiteSpace(NewCommentText) ||
+    AuthServices.CurrentUser is null;
 
     bool IsThreadPostDisabled =>
         string.IsNullOrWhiteSpace(NewThreadTitle) ||
@@ -223,13 +225,11 @@
         creationOfThread = true;
     }
 
-    void CreateThreadItem( ) //ThreadItem thread)
+    void CreateThreadItem( ) 
     {
         OnCreateThreadItem?.Invoke();
-       // ModalState.Show();
+
     }
-
-
 
     void DeleteThread()
     {
@@ -240,39 +240,40 @@
     {
         ActiveThread = thread;
         NewCommentText = "";
-        NewCommentAuthor = "";
+        NewCommentAuthor = "";  
     }
 
     void CloseThread()
     {
         ActiveThread = null;
     }
-    // void PostThread()
-    // {
-    //     if (IsThreadPostDisabled)
-    //         return;
-    //
-    //     var newThread = new ThreadItem
-    //     {
-    //         Title = NewThreadTitle.Trim(),
-    //         ThreadContent = NewThreadContent.Trim(),
-    //         CreatedAt = DateTime.Now,
-    //         Comments = new List<Comment>()
-    //     };
-    //
-    //     ThreadServices.CreateThread(newThread);
-    //
-    //     ActiveThreads = ThreadServices.GetAllThreads();
-    //
-    //     ActiveThread = newThread;
-    //
-    //     NewThreadTitle = "";
-    //     NewThreadContent = "";
-    //
-    //     creationOfThread = false;
-    // }
 
     void PostThread()
+    {
+        if (IsThreadPostDisabled)
+            return;
+    
+        var newThread = new ThreadItem
+        {
+            Title = NewThreadTitle.Trim(),
+            ThreadContent = NewThreadContent.Trim(),
+            CreatedAt = DateTime.Now,
+            Comments = new List<Comment>()
+        };
+    
+        ThreadServices.CreateThread(newThread);
+    
+        ActiveThreads = ThreadServices.GetAllThreads();
+    
+        ActiveThread = newThread;
+    
+        NewThreadTitle = "";
+        NewThreadContent = "";
+    
+        creationOfThread = false;
+    }
+
+    /*void PostThread()
     {
         if (IsThreadPostDisabled) return;
     
@@ -292,7 +293,7 @@
         NewThreadTitle = "";
         NewThreadContent = "";
         creationOfThread = false;
-    }
+    }*/
 
     void PostComment()
     {
@@ -301,7 +302,10 @@
         ActiveThread.Comments.Add(new Comment
         {
             Content = NewCommentText.Trim(),
-            CreatedAt = DateTime.Now
+            CreatedAt = DateTime.Now,
+            ApplicationUser = AuthServices.CurrentUser
+
+
         });
 
         NewCommentText = "";
