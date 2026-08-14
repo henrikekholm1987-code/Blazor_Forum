@@ -19,3 +19,10 @@ obj/
 
 # Logs
 *.log
+
+.vs/
+bin/
+obj/
+*.user
+
+*.db

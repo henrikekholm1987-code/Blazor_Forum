@@ -1,0 +1,14 @@
+@page "/user/{UserId}"
+
+<h3>UserPage</h3>
+
+
+@code {
+    [Parameter]
+    public string? UserId { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        // Hämta användardata här
+    }
+}

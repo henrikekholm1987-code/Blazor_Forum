@@ -63,7 +63,7 @@
 
 @code 
 {
-    [Inject] AuthService authServices { get; set; }
+    [Inject] public required AuthService authServices { get; set; }
     
     string username = "";
     string password = "";

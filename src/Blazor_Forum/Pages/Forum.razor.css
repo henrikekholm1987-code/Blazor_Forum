@@ -8,6 +8,9 @@
     width: 100%;
     box-sizing: border-box;
 }
+.home-subtitle a.active {
+    font-weight: bold;
+}
 
 .cb-thread:hover {
     background: #efeee9;

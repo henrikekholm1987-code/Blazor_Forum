@@ -1,0 +1,19 @@
+.cb-thread {
+	padding: 10px 12px;
+	border: 1.5px solid #2c2c2a;
+	border-radius: 6px;
+	background: white;
+	margin-bottom: 2px;
+	cursor: pointer;
+	width: 100%;
+	box-sizing: border-box;
+}
+
+	.cb-thread:hover {
+		background: #efeee9;
+	}
+
+.cb-thread-title {
+	margin-left: 6px;
+	color: #2c2c2a;
+}
