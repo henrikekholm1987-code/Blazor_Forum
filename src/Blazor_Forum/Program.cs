@@ -1,6 +1,5 @@
 using Application.Auth;
 using Application.ServiceLocator;
-
 using Blazor_Forum;
 using Infrastructure.Persistence;
 using Microsoft.AspNetCore.Authentication.Cookies;
@@ -12,8 +11,9 @@ builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
+
 builder.Services.AddScoped<CreateAccountModalState>();
-builder.Services.AddSingleton<CreateAccountModalState>();
+
 builder.Services.AddScoped<ApplicationUserService>();
  
 builder.Services.AddAuthentication();
@@ -45,3 +45,4 @@ app.UseAntiforgery();
 app.MapRazorComponents<App>()
     .AddInteractiveServerRenderMode();
 app.Run();
+

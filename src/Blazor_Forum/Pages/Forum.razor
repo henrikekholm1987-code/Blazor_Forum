@@ -10,9 +10,11 @@
 <PageTitle>Forum</PageTitle>
 
 <div class="home-wrapper">
-    <p class="home-subtitle">
-        ApplicationUser.Name:
-        @AuthServices.CurrentUser.UserName;
+       <p class="home-subtitle">
+        User logged in:
+        <NavLink href="@($"/user/{AuthServices.CurrentUser?.ApplicationUserId}")">
+    @AuthServices.CurrentUser?.UserName
+</NavLink>
     </p>
     
     <h1 class="home-title">Forum</h1>
@@ -132,7 +134,7 @@
 
             <div class="modal-comments">
                 
-                @if (!ActiveThread.Comments.Any())
+                @if (ActiveThread.Comments is null || !ActiveThread.Comments.Any())
                 {
                     <p class="modal-empty">No comments yet. Be the first.</p>
                 }
@@ -180,12 +182,12 @@
 
 @code {
 
-    [Inject] NavigationManager Nav { get; set; }
-    
     ThreadItem? ActiveThread;
+        [Inject]
+    public required NavigationManager Nav { get; set; }
+
+    public Action? OnCreateThreadItem;  
     
-    
-    public Action OnCreateThreadItem;
     bool creationOfThread;
     
     string NewThreadTitle = "";
@@ -230,6 +232,8 @@
         OnCreateThreadItem?.Invoke();
        // ModalState.Show();
     }
+
+
 
     void DeleteThread()
     {
