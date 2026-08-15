@@ -71,38 +71,40 @@
 
 @if (creationOfThread is true)
 {
-     <div class="modal-backdrop" @onclick="DeleteThread">
+    <div class="modal-backdrop" @onclick="DeleteThread">
         <div class="modal-box" @onclick:stopPropagation="true">
-            <div>
-                <div class="modal-header">
-                    
-                    <span class="cb-keyword">topic:</span>
-                    
-                    <textarea class="compose-text"
-                      rows="2"
-                      @bind="NewThreadTitle">
-                    </textarea>
-                    
-                    <button class="modal-close" @onclick="DeleteThread">&times;
-                    </button>
-                    
-                </div>
-                <div class="modal-compose">
-                    <textarea class="compose-text"
-                              rows="2"
-                              placeholder="text of topic..."
-                              @bind="NewThreadContent">
-                    </textarea>
-                    <div class="compose-row">
-                        <button class="cb-btn cb-btn-primary"
-                                @onclick="PostThread"
-                                disabled="@IsThreadPostDisabled">
-                            &#9654; post thread
-                        </button>
-                    </div>
-                </div>
 
+            <div class="modal-header">
+                <div>
+                    <span class="cb-keyword">topic:</span>
+                    <span class="modal-title">new thread</span>
+                </div>
+                <button class="modal-close" @onclick="DeleteThread">&times;</button>
             </div>
+
+            <div class="modal-comments">
+                <textarea class="compose-text"
+                          rows="2"
+                          placeholder="topic title..."
+                          @bind="NewThreadTitle">
+                </textarea>
+            </div>
+
+            <div class="modal-compose">
+                <textarea class="compose-text"
+                          rows="2"
+                          placeholder="text of topic..."
+                          @bind="NewThreadContent">
+                </textarea>
+                <div class="compose-row">
+                    <button class="cb-btn cb-btn-primary"
+                            @onclick="PostThread"
+                            disabled="@IsThreadPostDisabled">
+                        &#9654; post thread
+                    </button>
+                </div>
+            </div>
+
         </div>
     </div>
 }

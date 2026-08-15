@@ -1,6 +1,54 @@
 @page "/user/{UserId}"
 
-<h3>UserPage</h3>
+
+<PageTitle>UserPage</PageTitle>
+
+<div class="home-wrapper">
+       <p class="home-subtitle">
+        User logged in:
+
+    </p>
+    
+    <h1 class="home-title">Forum</h1>
+    <p class="home-subtitle">
+        The discussions listed below are arranged in no particular order.
+        Some may be useful.
+        Others may simply exist.
+    </p>
+
+    <div class="cb-card">
+
+        <div class="cb-card-header">
+            <span class="cb-keyword">threads</span>
+        </div>
+
+     
+
+        <div class="cb-actions">
+            
+            <button class="cb-btn cb-btn-primary" @onclick="Back">
+                &#9654; back to forum 
+            </button>
+        </div>
+
+    </div>
+
+    <div class="cb-canvas">
+        <div class="cb-block">
+            <span class="cb-keyword">if</span>
+            something should be discussed:
+            <div class="cb-announce">
+                <span class="cb-keyword">then</span>
+                <span class="cb-string">"create a thread"</span>
+            </div>
+            <div class="cb-else-label">else:</div>
+            <div class="cb-announce">
+                <span class="cb-keyword">then</span>
+                <span class="cb-string">"observe existing threads"</span>
+            </div>
+        </div>
+    </div>
+</div>
 
 
 @code {
@@ -10,6 +58,13 @@
     protected override async Task OnInitializedAsync()
     {
         // Hämta användardata här
+    }
+
+
+    void Back()
+    {
+
+
     }
 }
 
