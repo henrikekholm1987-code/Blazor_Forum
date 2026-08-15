@@ -37,6 +37,28 @@ public class ThreadServices
         return thread;
     }
 
+    public async Task<Comment> CreateCommentAsync(Comment comment)
+    {
+        ValidateComment(comment);
+
+        _dbContext.Comments.Add(comment);
+        await _dbContext.SaveChangesAsync();
+
+        return comment;
+    }
+
+    private static void ValidateComment(Comment comment)
+    {
+        if (string.IsNullOrWhiteSpace(comment.Content))
+            throw new ArgumentException("Kommentaren får inte vara tom.", nameof(comment.Content));
+
+        if (comment.ApplicationUser is null)
+            throw new ArgumentException("Kommentaren måste ha en författare.", nameof(comment.ApplicationUser));
+
+        if (comment.ThreadItem is null)
+            throw new ArgumentException("Kommentaren måste tillhöra en tråd.", nameof(comment.ThreadItem));
+    }
+
     private static void ValidateThread(ThreadItem thread)
     {
         if (string.IsNullOrWhiteSpace(thread.Title))

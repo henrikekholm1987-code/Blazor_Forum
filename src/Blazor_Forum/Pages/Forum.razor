@@ -2,11 +2,11 @@
 @inject AuthService AuthServices
 @inject ApplicationUserService UserService
 
+@inject ThreadServices ThreadServices
 @using Application.Auth
 @using Application.ServiceLocator
 @using Entities
 
-@inject ThreadServices ThreadServices
 
 <PageTitle>Forum</PageTitle>
 
@@ -145,10 +145,6 @@
                     </div>
                 }
             </div>
-
-    
-
-            
             <div class="modal-compose">
     <textarea class="compose-text"
               rows="2"
@@ -172,6 +168,7 @@
 @code {
 
     ThreadItem? ActiveThread;
+
         [Inject]
     public required NavigationManager Nav { get; set; }
 
@@ -186,29 +183,21 @@
     string NewCommentAuthor = "";
 
     bool IsCommentPostDisabled =>
-    string.IsNullOrWhiteSpace(NewCommentText) ||
-    AuthServices.CurrentUser is null;
+        string.IsNullOrWhiteSpace(NewCommentText) ||
+        AuthServices.CurrentUser is null;
 
     bool IsThreadPostDisabled =>
         string.IsNullOrWhiteSpace(NewThreadTitle) ||
         string.IsNullOrWhiteSpace(NewThreadContent);
-    
-    // List<ThreadItem> ActiveThreads = new();
-    //
-    // protected override void OnInitialized()
-    // {
-    //     ActiveThreads = ThreadServices.GetAllThreads();
-    // }
+   
+        
+    List<ThreadItem> ActiveThreads = new();
 
-    #region OldWay
-    
-    List<ThreadItem> ActiveThreads = new()
+    protected override void OnInitialized()
     {
-        new() { ThreadId = 1, Title = "Welcome to the forum" },
-        new() { ThreadId = 2, Title = "Books worth reading this year" },
-        new() { ThreadId = 3, Title = "Strange problems in programming" }
-    };
-    
+        ActiveThreads = ThreadServices.GetAllThreads();
+    }
+
     void CreateThread()
     {
         NewThreadTitle = "";
@@ -216,10 +205,12 @@
         creationOfThread = true;
     }
 
+    #region OldWay
+    
+   
     void CreateThreadItem( ) 
     {
         OnCreateThreadItem?.Invoke();
-
     }
 
     void DeleteThread()
@@ -238,7 +229,64 @@
     {
         ActiveThread = null;
     }
+    async Task PostThread()
+{
+    if (IsThreadPostDisabled)
+        return;
 
+    var newThread = new ThreadItem
+    {
+        Title = NewThreadTitle.Trim(),
+        ThreadContent = NewThreadContent.Trim(),
+        CreatedAt = DateTime.Now,
+        ApplicationUser = AuthServices.CurrentUser!,
+        Comments = new List<Comment>()
+    };
+
+    try
+    {
+        await ThreadServices.CreateThreadAsync(newThread);
+        ActiveThreads = ThreadServices.GetAllThreads();
+        ActiveThread = ActiveThreads.First(t => t.ThreadId == newThread.ThreadId);
+
+        NewThreadTitle = "";
+        NewThreadContent = "";
+        creationOfThread = false;
+    }
+    catch (ArgumentException ex)
+    {
+        Console.WriteLine($"Validation error: {ex.Message}");
+    }
+}
+
+async Task PostComment()
+{
+    if (ActiveThread is null || IsCommentPostDisabled)
+        return;
+
+    var newComment = new Comment
+    {
+        Content = NewCommentText.Trim(),
+        CreatedAt = DateTime.Now,
+        ApplicationUser = AuthServices.CurrentUser!,
+        ThreadItem = ActiveThread
+    };
+
+    try
+    {
+        await ThreadServices.CreateCommentAsync(newComment);
+        ActiveThreads = ThreadServices.GetAllThreads();
+        ActiveThread = ActiveThreads.First(t => t.ThreadId == ActiveThread.ThreadId);
+
+        NewCommentText = "";
+    }
+    catch (ArgumentException ex)
+    {
+        Console.WriteLine($"Validation error: {ex.Message}");
+    }
+}
+
+    /*
     void PostThread()
     {
         if (IsThreadPostDisabled)
@@ -262,7 +310,7 @@
         NewThreadContent = "";
     
         creationOfThread = false;
-    }
+    }*/
 
     /*void PostThread()
     {
@@ -285,7 +333,7 @@
         NewThreadContent = "";
         creationOfThread = false;
     }*/
-
+    /*
     void PostComment()
     {
         if (ActiveThread is null ) return;
@@ -295,12 +343,10 @@
             Content = NewCommentText.Trim(),
             CreatedAt = DateTime.Now,
             ApplicationUser = AuthServices.CurrentUser
-
-
         });
 
         NewCommentText = "";
-    }
+    }*/
 
     string GetInitials(string name)
     {
