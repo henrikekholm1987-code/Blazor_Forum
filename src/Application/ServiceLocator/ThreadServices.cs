@@ -6,6 +6,7 @@ namespace Application.ServiceLocator;
 public class ThreadServices
 {
     ApplicationDbContext _dbContext;
+
     public ThreadServices(ApplicationDbContext dbContext)
     {
         _dbContext = dbContext;
@@ -18,16 +19,6 @@ public class ThreadServices
     {
         return _dbContext.ThreadItems.ToList();
     }
-
-    // public void AddThread(string NewThreadTitle, string NewThreadContent)
-    // {
-    //     ThreadItem newThread = new ThreadItem()
-    //         .Title(NewThreadTitle)
-    //         .Content(NewThreadContent)
-    //         
-    //     
-    //     _dbContext.ThreadItems.Add(thread);
-    // }
     
     public ThreadItem CreateThread(ThreadItem thread)
     {
@@ -35,7 +26,26 @@ public class ThreadServices
         _dbContext.SaveChanges();
         return thread;
     }
-    
-    
-    
+
+    public async Task<ThreadItem> CreateThreadAsync(ThreadItem thread)
+    {
+        ValidateThread(thread);
+
+        _dbContext.ThreadItems.Add(thread);
+        await _dbContext.SaveChangesAsync();
+
+        return thread;
+    }
+
+    private static void ValidateThread(ThreadItem thread)
+    {
+        if (string.IsNullOrWhiteSpace(thread.Title))
+            throw new ArgumentException("Titeln får inte vara tom.", nameof(thread.Title));
+
+        if (thread.Title.Length > 200)
+            throw new ArgumentException("Titeln är för lång (max 200 tecken).", nameof(thread.Title));
+
+        if (string.IsNullOrWhiteSpace(thread.ThreadContent))
+            throw new ArgumentException("Innehållet får inte vara tomt.", nameof(thread.ThreadContent));
+    }
 }

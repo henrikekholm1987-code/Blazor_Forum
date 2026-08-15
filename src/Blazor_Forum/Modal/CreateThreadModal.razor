@@ -1,6 +1,9 @@
+@using System.ComponentModel.DataAnnotations
+@using System.Security.Claims
 @using Application.ServiceLocator
 @using Entities
 
+@inject ThreadServices ThreadServices
 @inject Forum Forum;
 
 @if (CreationOfThread)
@@ -28,13 +31,21 @@
                               @bind="NewThreadContent">
                     </textarea>
 
-                    <div class="compose-row">
+                    @*<div class="compose-row">
                         <button class="cb-btn cb-btn-primary"
                                 @onclick="PostThread"
                                 disabled="@IsThreadPostDisabled">
                             &#9654; post thread
                         </button>
-                    </div>
+                    </div>*@
+
+                    <button class="cb-btn cb-btn-primary"
+                            @onclick="PostThread"
+                            disabled="@IsThreadPostDisabled">
+                        &#9654; post thread
+                    </button>
+
+
                 </div>
             </div>
         </div>
@@ -58,15 +69,13 @@
     {
         Forum.OnCreateThreadItem += CreateThread;
     }
+
     void DeleteThread()
     {
       
     }
 
-    void PostThread()
-    {
-       
-    }
+    
 
     void CreateThread()
     {
@@ -75,6 +84,28 @@
         NewThreadTitle = "";
         NewThreadContent = "";
         
+    }
+
+     async Task PostThread()
+    {
+        var thread = new ThreadItem
+        {
+            Title = NewThreadTitle,
+            ThreadContent = NewThreadContent
+        };
+
+        try
+        {
+            var created = await ThreadServices.CreateThreadAsync(thread);
+            CreationOfThread = false;
+            NewThreadTitle = "";
+            NewThreadContent = "";
+        }
+        catch (ArgumentException ex)
+        {
+            Console.WriteLine($"Validation error: {ex.Message}");
+            
+        }
     }
     
 }
