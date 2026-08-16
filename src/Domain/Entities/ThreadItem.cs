@@ -10,6 +10,5 @@ public class ThreadItem
     // public int AuthorId { get; set; }
     public ApplicationUser ApplicationUser { get; set; } = null!;
     public List<Comment>? Comments { get; set; } = new();
-    
 }
 
