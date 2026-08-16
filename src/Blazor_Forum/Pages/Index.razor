@@ -26,7 +26,7 @@
             <span class="cb-keyword">login</span>
         </div>
 
-        <div class="cb-field-group">
+        <!--- <div class="cb-field-group">
             <label class="cb-label">username:</label>
             <input class="cb-input" type="text" placeholder="your username" @bind = "username" />
         </div>
@@ -38,9 +38,27 @@
 
         <div class="cb-actions">
             <button class="cb-btn cb-btn-primary" @onclick="LoginButton">  &#9654; Login</button>
-            <button class="cb-btn cb-btn-secondary" @onclick="OpenRegisterModal"> Create account</button>
+            <button class="cb-btn cb-btn-secondary" @onclick="OpenRegisterModal"> Create account</button> --->
+
+
+            <form method="post" action="/auth/login">
+                <div class="cb-field-group">
+                    <label class="cb-label">username:</label>
+                    <input class="cb-input" type="text" name="username" placeholder="your username" />
+                </div>
+
+                <div class="cb-field-group">
+                    <label class="cb-label">password:</label>
+                    <input class="cb-input" type="password" name="password" placeholder="••••••••" />
+                </div>
+
+                <div class="cb-actions">
+                    <button class="cb-btn cb-btn-primary" type="submit">  &#9654; Login</button>
+                    <button class="cb-btn cb-btn-secondary" type="button" @onclick="OpenRegisterModal"> Create account</button>
+                </div>
+            </form>
             
-        </div>
+        
     </div>
     
     <div class="cb-canvas">
@@ -61,22 +79,10 @@
 
 <CreateAccountModal/>
 
+
 @code 
 {
     [Inject] public required AuthService authServices { get; set; }
     
-    string username = "";
-    string password = "";
-    
-    private async Task LoginButton() 
-    {
-        var success = await authServices.Login(username, password);
-        
-        if (success)
-        {
-            NavigationManager.NavigateTo("/forum"); 
-        }
-        
-    }
     void OpenRegisterModal() => ModalState.Show();
 }

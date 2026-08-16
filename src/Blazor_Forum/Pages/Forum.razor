@@ -3,6 +3,7 @@
 @inject ApplicationUserService UserService
 @inject ThreadServices ThreadServices
 
+@using Microsoft.AspNetCore.Components.Authorization
 @using Application.Auth
 @using Application.ServiceLocator
 
@@ -14,8 +15,8 @@
 <div class="home-wrapper">
        <p class="home-subtitle">
         User logged in:
-        <NavLink href="@($"/user/{AuthServices.CurrentUser?.ApplicationUserId}")">
-    @AuthServices.CurrentUser?.UserName
+<NavLink href="@($"/user/{currentUser?.ApplicationUserId}")">
+    @currentUser?.UserName
 </NavLink>
     </p>
     
@@ -185,7 +186,7 @@
 
     bool IsCommentPostDisabled =>
         string.IsNullOrWhiteSpace(NewCommentText) ||
-        AuthServices.CurrentUser is null;
+        currentUser is null;
 
     bool IsThreadPostDisabled =>
         string.IsNullOrWhiteSpace(NewThreadTitle) ||
@@ -194,9 +195,29 @@
         
     List<ThreadItem> ActiveThreads = new();
 
-        protected override void OnInitialized()
+        /* protected override void OnInitialized()
         {
             ActiveThreads = ThreadServices.GetAllThreads();
+        }*/
+
+        [CascadingParameter]
+        private Task<AuthenticationState>? AuthState { get; set; }
+
+        ApplicationUser? currentUser;
+
+        protected override async Task OnInitializedAsync()
+        {
+            ActiveThreads = ThreadServices.GetAllThreads();
+
+            if (AuthState is not null)
+            {
+                var authState = await AuthState;
+                var idClaim = authState.User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+                if (idClaim is not null && int.TryParse(idClaim, out var userId))
+                {
+                    currentUser = UserService.GetUserById(userId);
+                }
+            }
         }
 
         void CreateThread()
@@ -238,7 +259,7 @@
                 Title = NewThreadTitle.Trim(),
                 ThreadContent = NewThreadContent.Trim(),
                 CreatedAt = DateTime.Now,
-                ApplicationUser = AuthServices.CurrentUser!,
+                ApplicationUser = currentUser,
                 Comments = new List<Comment>()
             };
 
@@ -267,7 +288,7 @@
             {
                 Content = NewCommentText.Trim(),
                 CreatedAt = DateTime.Now,
-                ApplicationUser = AuthServices.CurrentUser!,
+                ApplicationUser = currentUser,
                 ThreadItem = ActiveThread
             };
 
