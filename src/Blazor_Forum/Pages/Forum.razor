@@ -1,10 +1,11 @@
 ﻿@page "/forum"
 @inject AuthService AuthServices
 @inject ApplicationUserService UserService
-
 @inject ThreadServices ThreadServices
+
 @using Application.Auth
 @using Application.ServiceLocator
+
 @using Entities
 
 
@@ -193,160 +194,100 @@
         
     List<ThreadItem> ActiveThreads = new();
 
-    protected override void OnInitialized()
-    {
-        ActiveThreads = ThreadServices.GetAllThreads();
-    }
+        protected override void OnInitialized()
+        {
+            ActiveThreads = ThreadServices.GetAllThreads();
+        }
 
-    void CreateThread()
-    {
-        NewThreadTitle = "";
-        NewThreadContent = "";
-        creationOfThread = true;
-    }
+        void CreateThread()
+        {
+            NewThreadTitle = "";
+            NewThreadContent = "";
+            creationOfThread = true;
+        }
 
-    #region OldWay
+        #region OldWay
     
    
-    void CreateThreadItem( ) 
-    {
-        OnCreateThreadItem?.Invoke();
-    }
-
-    void DeleteThread()
-    {
-        creationOfThread = false;
-    }
-
-    void OpenThread(ThreadItem thread)
-    {
-        ActiveThread = thread;
-        NewCommentText = "";
-        NewCommentAuthor = "";  
-    }
-
-    void CloseThread()
-    {
-        ActiveThread = null;
-    }
-    async Task PostThread()
-{
-    if (IsThreadPostDisabled)
-        return;
-
-    var newThread = new ThreadItem
-    {
-        Title = NewThreadTitle.Trim(),
-        ThreadContent = NewThreadContent.Trim(),
-        CreatedAt = DateTime.Now,
-        ApplicationUser = AuthServices.CurrentUser!,
-        Comments = new List<Comment>()
-    };
-
-    try
-    {
-        await ThreadServices.CreateThreadAsync(newThread);
-        ActiveThreads = ThreadServices.GetAllThreads();
-        ActiveThread = ActiveThreads.First(t => t.ThreadId == newThread.ThreadId);
-
-        NewThreadTitle = "";
-        NewThreadContent = "";
-        creationOfThread = false;
-    }
-    catch (ArgumentException ex)
-    {
-        Console.WriteLine($"Validation error: {ex.Message}");
-    }
-}
-
-async Task PostComment()
-{
-    if (ActiveThread is null || IsCommentPostDisabled)
-        return;
-
-    var newComment = new Comment
-    {
-        Content = NewCommentText.Trim(),
-        CreatedAt = DateTime.Now,
-        ApplicationUser = AuthServices.CurrentUser!,
-        ThreadItem = ActiveThread
-    };
-
-    try
-    {
-        await ThreadServices.CreateCommentAsync(newComment);
-        ActiveThreads = ThreadServices.GetAllThreads();
-        ActiveThread = ActiveThreads.First(t => t.ThreadId == ActiveThread.ThreadId);
-
-        NewCommentText = "";
-    }
-    catch (ArgumentException ex)
-    {
-        Console.WriteLine($"Validation error: {ex.Message}");
-    }
-}
-
-    /*
-    void PostThread()
-    {
-        if (IsThreadPostDisabled)
-            return;
-    
-        var newThread = new ThreadItem
+        void CreateThreadItem( ) 
         {
-            Title = NewThreadTitle.Trim(),
-            ThreadContent = NewThreadContent.Trim(),
-            CreatedAt = DateTime.Now,
-            Comments = new List<Comment>()
-        };
-    
-        ThreadServices.CreateThread(newThread);
-    
-        ActiveThreads = ThreadServices.GetAllThreads();
-    
-        ActiveThread = newThread;
-    
-        NewThreadTitle = "";
-        NewThreadContent = "";
-    
-        creationOfThread = false;
-    }*/
+            OnCreateThreadItem?.Invoke();
+        }
 
-    /*void PostThread()
-    {
-        if (IsThreadPostDisabled) return;
-    
-        var nextThreadId = ActiveThreads.Count == 0 ? 1 : ActiveThreads.Max(t => t.ThreadId) + 1;
-        
-        var newThread = new ThreadItem
+        void DeleteThread()
         {
-            ThreadId = nextThreadId,
-            Title = NewThreadTitle.Trim(),
-            ThreadContent = NewThreadContent.Trim(),
-            CreatedAt = DateTime.Now,
-            Comments = new List<Comment>()
-        };
-    
-        ActiveThreads.Insert(0, newThread);
-        ActiveThread = newThread;
-        NewThreadTitle = "";
-        NewThreadContent = "";
-        creationOfThread = false;
-    }*/
-    /*
-    void PostComment()
-    {
-        if (ActiveThread is null ) return;
+            creationOfThread = false;
+        }
 
-        ActiveThread.Comments.Add(new Comment
+        void OpenThread(ThreadItem thread)
         {
-            Content = NewCommentText.Trim(),
-            CreatedAt = DateTime.Now,
-            ApplicationUser = AuthServices.CurrentUser
-        });
+            ActiveThread = thread;
+            NewCommentText = "";
+            NewCommentAuthor = "";  
+        }
 
-        NewCommentText = "";
-    }*/
+        void CloseThread()
+        {
+            ActiveThread = null;
+        }
+        async Task PostThread()
+        {
+            if (IsThreadPostDisabled)
+                return;
+
+            var newThread = new ThreadItem
+            {
+                Title = NewThreadTitle.Trim(),
+                ThreadContent = NewThreadContent.Trim(),
+                CreatedAt = DateTime.Now,
+                ApplicationUser = AuthServices.CurrentUser!,
+                Comments = new List<Comment>()
+            };
+
+            try
+            {
+                await ThreadServices.CreateThreadAsync(newThread);
+                ActiveThreads = ThreadServices.GetAllThreads();
+                ActiveThread = ActiveThreads.First(t => t.ThreadId == newThread.ThreadId);
+
+                NewThreadTitle = "";
+                NewThreadContent = "";
+                creationOfThread = false;
+            }
+            catch (ArgumentException ex)
+            {
+                Console.WriteLine($"Validation error: {ex.Message}");
+            }
+        }
+
+        async Task PostComment()
+        {
+            if (ActiveThread is null || IsCommentPostDisabled)
+                return;
+
+            var newComment = new Comment
+            {
+                Content = NewCommentText.Trim(),
+                CreatedAt = DateTime.Now,
+                ApplicationUser = AuthServices.CurrentUser!,
+                ThreadItem = ActiveThread
+            };
+
+            try
+            {
+                await ThreadServices.CreateCommentAsync(newComment);
+                ActiveThreads = ThreadServices.GetAllThreads();
+                ActiveThread = ActiveThreads.First(t => t.ThreadId == ActiveThread.ThreadId);
+
+                NewCommentText = "";
+            }
+            catch (ArgumentException ex)
+            {
+                Console.WriteLine($"Validation error: {ex.Message}");
+            }
+        }
+
+  
 
     string GetInitials(string name)
     {

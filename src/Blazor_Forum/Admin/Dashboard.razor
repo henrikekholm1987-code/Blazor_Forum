@@ -1,64 +1,80 @@
 @page "/dashboard"
-
 @using Application.ServiceLocator
 @using Entities
 @layout Layout.AdminLayout
 
 @inject ApplicationUserService ApplicationUserService
+@inject Application.Auth.AuthService AuthServices
 
 <main class="home-wrapper">
     <header>
         <h1 class="home-title">Dashboard</h1>
     </header>
 
-    <section class="cb-card">
+    @if (AuthServices.CurrentUser != null && IsUserAdmin(AuthServices.CurrentUser))
+    {
+        <!-- Detta visas bara om användaren är Admin enligt ditt eget system -->
+        <section class="cb-card">
+            <header class="cb-card-header">
+                <span class="cb-keyword">applications</span>
+            </header>
 
-        <header class="cb-card-header">
-            <span class="cb-keyword">applications</span>
-        </header>
-
-        <ul class="cb-list">
-
-            @foreach (var applicationUser in users)
-            {
-                <li class="cb-thread" @onclick="() => OpenAuthor(applicationUser
-                )">
-                    <span class="cb-keyword">ApplicationUser</span>
-                    <span class="cb-thread-title">@applicationUser.UserName</span>
-                    <span class="cb-thread-title">@applicationUser.Threads.Count.ToString()</span>
-                    <button class="cb-modal-close"
-                            @onclick="() => DeleteAuthor(applicationUser)">✕
-                    </button>
-                </li>
-            }
-        </ul>
-    </section>
+            <ul class="cb-list">
+                @foreach (var applicationUser in users)
+                {
+                    <li class="cb-thread" @onclick="() => OpenAuthor(applicationUser)">
+                        <span class="cb-keyword">ApplicationUser</span>
+                        <span class="cb-thread-title">@applicationUser.UserName</span>
+                        <span class="cb-thread-title">@(applicationUser.Threads?.Count.ToString() ?? "0")</span>
+                        <button class="cb-modal-close" @onclick="() => DeleteAuthor(applicationUser)" @onclick:stopPropagation>✕</button>
+                    </li>
+                }
+            </ul>
+        </section>
+    }
+    else
+    {
+        <!-- Detta visas om man inte är inloggad eller saknar behörighet -->
+        <div class="cb-card" style="padding: 20px; text-align: center;">
+            <span class="cb-keyword">Nekat tillträde</span>
+            <p>Du måste vara inloggad som administratör för att se denna sida.</p>
+            <a href="/forum" class="cb-btn cb-btn-primary" style="text-decoration: none; display: inline-block; margin-top: 10px;">Tillbaka till forumet</a>
+        </div>
+    }
 </main>
 
 @code 
 {
-    public required ApplicationUser applicationUser {get; set;} // @attribute [Authorize(Roles = "Admin")]
-    
-    private List <ApplicationUser> users = new();
+    private List<ApplicationUser> users = new();
     
     protected override void OnInitialized()
     {
-        users = ApplicationUserService.GetAllUsers();
+        users = ApplicationUserService.GetAllUsers() ?? new();
+    }
+
+    // Din egen anpassade kontroll för vem som är Admin
+    private bool IsUserAdmin(ApplicationUser user)
+    {
+        // Ändra "admin@forum.com" till din faktiska admin-mejl/användarnamn, 
+        // eller kolla mot en property om du har en sådan (t.ex. user.IsAdmin)
+        return user.UserName == "admin@forum.com"; 
     }
     
     void OpenAuthorThread(ApplicationUser applicationUser)
     {
-        foreach (var thread in users)
+        if (applicationUser.Threads != null)
         {
-            Console.WriteLine(thread);
-            Console.WriteLine(applicationUser.Threads.Count.ToString());
+            foreach (var thread in users)
+            {
+                Console.WriteLine(thread);
+                Console.WriteLine(applicationUser.Threads.Count.ToString());
+            }
         }
     }
 
     void OpenAuthor(ApplicationUser applicationUser)
     {
-        applicationUser.ApplicationUserId = applicationUser.ApplicationUserId;
-       OpenAuthorThread(applicationUser);
+        OpenAuthorThread(applicationUser);
     }
 
     void DeleteAuthor(ApplicationUser applicationUser)
@@ -66,5 +82,4 @@
         users.Remove(applicationUser);
         ApplicationUserService.DeleteAuthor(applicationUser);
     }
-  
 }

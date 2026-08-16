@@ -5,11 +5,11 @@
 
 <div class="home-wrapper">
        <p class="home-subtitle">
-        User logged in:
-
+        Number of gams to move:
     </p>
     
-    <h1 class="home-title">Forum</h1>
+    <h1 class="home-title">logged in as: @UserId</h1>
+
     <p class="home-subtitle">
         The discussions listed below are arranged in no particular order.
         Some may be useful.
@@ -53,11 +53,15 @@
     [Parameter]
     public string? UserId { get; set; }
 
-    protected override async Task OnInitializedAsync()
+   
+
+   
+
+
+     protected override async Task OnInitializedAsync()
     {
         // Hämta användardata här
     }
-
 
     void Back()
     {
