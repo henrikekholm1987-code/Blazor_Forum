@@ -1,5 +1,4 @@
 ﻿@page "/forum"
-@attribute [Authorize]
 @inject AuthService AuthServices
 @inject ApplicationUserService UserService
 @inject ThreadServices ThreadServices
@@ -7,7 +6,7 @@
 @using Microsoft.AspNetCore.Components.Authorization
 @using Application.Auth
 @using Application.ServiceLocator
-@using Microsoft.AspNetCore.Authorization
+
 @using Entities
 
 
