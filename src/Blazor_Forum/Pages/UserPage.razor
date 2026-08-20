@@ -1,4 +1,12 @@
 @page "/user/{UserId}"
+@attribute [Authorize]
+@inject ApplicationUserService UserService
+@inject NavigationManager Nav
+@using Application.ServiceLocator
+
+
+@using Entities
+@using Microsoft.AspNetCore.Authorization
 
 
 <PageTitle>UserPage</PageTitle>
@@ -8,7 +16,8 @@
         Number of gams to move:
     </p>
     
-    <h1 class="home-title">logged in as: @UserId</h1>
+    <!--<h1 class="home-title">logged in as: @UserId</h1> -->
+    <h1 class="home-title">logged in as: @(user?.UserName ?? "unknown user")</h1>
 
     <p class="home-subtitle">
         The discussions listed below are arranged in no particular order.
@@ -49,14 +58,9 @@
 </div>
 
 
-@code {
+@code {/*
     [Parameter]
     public string? UserId { get; set; }
-
-   
-
-   
-
 
      protected override async Task OnInitializedAsync()
     {
@@ -65,8 +69,23 @@
 
     void Back()
     {
+    }*/
 
+    [Parameter]
+    public string? UserId { get; set; }
 
+    ApplicationUser? user;
+
+    protected override void OnInitialized()
+    {
+        if (int.TryParse(UserId, out var id))
+        {
+            user = UserService.GetUserById(id);
+        }
+    }
+
+    void Back()
+    {
+        Nav.NavigateTo("/forum");
     }
 }
-

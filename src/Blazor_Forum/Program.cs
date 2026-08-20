@@ -4,7 +4,6 @@ using Blazor_Forum;
 using Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Components.Authorization;
-
 using Microsoft.AspNetCore.Authentication;
 using System.Security.Claims;
 using Entities;
