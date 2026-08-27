@@ -1,5 +1,7 @@
 using Entities;
 using Infrastructure.Persistence;
+using Microsoft.EntityFrameworkCore;
+
 
 namespace Application.ServiceLocator;
 
@@ -15,11 +17,18 @@ public class ThreadServices
     string NewThreadTitle = "";
     string NewThreadContent = "";
     
-    public List<ThreadItem> GetAllThreads()
+    /* public List<ThreadItem> GetAllThreads()
     {
         return _dbContext.ThreadItems.ToList();
+    }*/
+    public List<ThreadItem> GetAllThreads()
+    {
+        return _dbContext.ThreadItems
+            .Include(t => t.ApplicationUser)
+            .Include(t => t.Comments)
+                .ThenInclude(c => c.ApplicationUser)
+            .ToList();
     }
-    
     public ThreadItem CreateThread(ThreadItem thread)
     {
         _dbContext.ThreadItems.Add(thread);
