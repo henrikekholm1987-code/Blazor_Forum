@@ -195,11 +195,6 @@
         
     List<ThreadItem> ActiveThreads = new();
 
-        /* protected override void OnInitialized()
-        {
-            ActiveThreads = ThreadServices.GetAllThreads();
-        }*/
-
         [CascadingParameter]
         private Task<AuthenticationState>? AuthState { get; set; }
 

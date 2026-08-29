@@ -64,8 +64,6 @@ app.UseAuthorization();
 
 app.UseAntiforgery();
 
-//
-
 app.MapPost("/auth/login", async (HttpContext context, AuthService authService) =>
 {
     var form = await context.Request.ReadFormAsync();
@@ -82,7 +80,8 @@ app.MapPost("/auth/login", async (HttpContext context, AuthService authService) 
     var claims = new List<Claim>
     {
         new(ClaimTypes.NameIdentifier, authService.CurrentUser!.ApplicationUserId.ToString()),
-        new(ClaimTypes.Name, authService.CurrentUser!.UserName)
+        new(ClaimTypes.Name, authService.CurrentUser!.UserName),
+        new(ClaimTypes.Role, authService.CurrentUser!.Role)
     };
 
     var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
@@ -96,7 +95,7 @@ app.MapPost("/auth/logout", async (HttpContext context) =>
     await context.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
     return Results.Redirect("/");
 });
-//
+
 app.MapRazorComponents<App>()
     .AddInteractiveServerRenderMode();
 

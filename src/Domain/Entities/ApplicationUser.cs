@@ -8,6 +8,9 @@ public class ApplicationUser
     public string UserName { get; set; } = null!;
     public string PasswordHash { get; set; } = null!;
 
+    public string Role { get; set; } = "User";
+
     public List<Comment> Comments { get; set; } = new();
     public List<ThreadItem> Threads { get; set; } = new();
+
 }

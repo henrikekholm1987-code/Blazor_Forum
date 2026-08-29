@@ -7,8 +7,7 @@ namespace Infrastructure.Persistence;
 
 public class  ApplicationDbContext : DbContext
 {
-    public ApplicationDbContext(DbContextOptions< ApplicationDbContext> options)
-        : base(options) { }
+    public ApplicationDbContext(DbContextOptions< ApplicationDbContext> options): base(options) { }
     public DbSet<ApplicationUser> ApplicationUsers => Set<ApplicationUser>();
     public DbSet<ThreadItem> ThreadItems => Set<ThreadItem>();
     public DbSet<Comment> Comments => Set<Comment>();
@@ -34,7 +33,7 @@ public class  ApplicationDbContext : DbContext
             .WithMany(u => u.Threads)
             //.HasForeignKey(t => t.AuthorId)
             .IsRequired()
-            .OnDelete(DeleteBehavior.Restrict);
+            .OnDelete(DeleteBehavior.Cascade);
 
         // Comment
         modelBuilder.Entity<Comment>()
@@ -45,7 +44,7 @@ public class  ApplicationDbContext : DbContext
             .WithMany(u => u.Comments)
             //.HasForeignKey(c => c.AuthorId)
             .IsRequired()
-            .OnDelete(DeleteBehavior.Restrict);
+            .OnDelete(DeleteBehavior.Cascade);
 
         modelBuilder.Entity<Comment>()
             .HasOne(c => c.ThreadItem)

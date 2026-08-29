@@ -1,25 +1,28 @@
 @page "/dashboard"
 @using Application.ServiceLocator
 @using Entities
+@using Microsoft.AspNetCore.Components.Authorization
 @layout Layout.AdminLayout
 
 @inject ApplicationUserService ApplicationUserService
 @inject Application.Auth.AuthService AuthServices
 
 <main class="home-wrapper">
+
     <header>
         <h1 class="home-title">Dashboard</h1>
     </header>
 
-    @if (AuthServices.CurrentUser != null && IsUserAdmin(AuthServices.CurrentUser))
+    @if (isAdmin)
     {
-        <!-- Detta visas bara om användaren är Admin enligt ditt eget system -->
         <section class="cb-card">
+
             <header class="cb-card-header">
                 <span class="cb-keyword">applications</span>
             </header>
 
             <ul class="cb-list">
+
                 @foreach (var applicationUser in users)
                 {
                     <li class="cb-thread" @onclick="() => OpenAuthor(applicationUser)">
@@ -34,7 +37,7 @@
     }
     else
     {
-        <!-- Detta visas om man inte är inloggad eller saknar behörighet -->
+        
         <div class="cb-card" style="padding: 20px; text-align: center;">
             <span class="cb-keyword">Nekat tillträde</span>
             <p>Du måste vara inloggad som administratör för att se denna sida.</p>
@@ -45,21 +48,23 @@
 
 @code 
 {
+    [CascadingParameter]
+    private Task<AuthenticationState>? AuthState { get; set; }
+
     private List<ApplicationUser> users = new();
-    
-    protected override void OnInitialized()
+    private bool isAdmin;
+
+    protected override async Task OnInitializedAsync()
     {
+        if (AuthState is not null)
+        {
+            var authState = await AuthState;
+            isAdmin = authState.User.IsInRole("Admin");
+        }
+
         users = ApplicationUserService.GetAllUsers() ?? new();
     }
 
-    // Din egen anpassade kontroll för vem som är Admin
-    private bool IsUserAdmin(ApplicationUser user)
-    {
-        // Ändra "admin@forum.com" till din faktiska admin-mejl/användarnamn, 
-        // eller kolla mot en property om du har en sådan (t.ex. user.IsAdmin)
-        return user.UserName == "admin@forum.com"; 
-    }
-    
     void OpenAuthorThread(ApplicationUser applicationUser)
     {
         if (applicationUser.Threads != null)
