@@ -161,8 +161,8 @@
         </button>
     </div>
 </div>
-        </div>
-    </div>
+   </div>    
+   </div>
 }
 
 
@@ -268,9 +268,11 @@
                 NewThreadContent = "";
                 creationOfThread = false;
             }
-            catch (ArgumentException ex)
+            catch (Exception ex)
             {
-                Console.WriteLine($"Validation error: {ex.Message}");
+             Console.WriteLine($"FEEL vid trådskapande: {ex.GetType().Name}: {ex.Message}");
+                        if (ex.InnerException != null)
+                            Console.WriteLine($"Inner: {ex.InnerException.Message}");
             }
         }
 
