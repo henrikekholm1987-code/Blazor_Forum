@@ -1,7 +1,10 @@
 @page "/dashboard"
+
+@attribute [Authorize(Roles = "Admin")]
 @using Application.ServiceLocator
 @using Entities
 @using Microsoft.AspNetCore.Components.Authorization
+@using Microsoft.AspNetCore.Authorization
 @layout Layout.AdminLayout
 
 @inject ApplicationUserService ApplicationUserService
@@ -37,7 +40,6 @@
     }
     else
     {
-        
         <div class="cb-card" style="padding: 20px; text-align: center;">
             <span class="cb-keyword">Nekat tillträde</span>
             <p>Du måste vara inloggad som administratör för att se denna sida.</p>

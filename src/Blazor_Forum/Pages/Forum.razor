@@ -1,4 +1,8 @@
 ﻿@page "/forum"
+
+@attribute [Authorize]
+@using Microsoft.AspNetCore.Authorization
+
 @inject AuthService AuthServices
 @inject ApplicationUserService UserService
 @inject ThreadServices ThreadServices
