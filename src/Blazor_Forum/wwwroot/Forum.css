@@ -36,8 +36,6 @@
     scroll-snap-align: start;
 }
 
-
-
 .comment-meta {
     display: flex;
     align-items: center;
@@ -251,6 +249,11 @@ main {
     border: none;
     font-weight: 600;
     transition: opacity 0.15s;
+}
+.cb-btn-mini {
+    font-size: 11px;
+    padding: 4px 10px;
+    border-radius: 4px;
 }
 
     .cb-btn:hover {

@@ -13,7 +13,6 @@
 
 @using Entities
 
-
 <PageTitle>Forum</PageTitle>
 
 <div class="home-wrapper">
@@ -54,10 +53,14 @@
             <button class="cb-btn cb-btn-primary" @onclick="CreateThread">
                 &#9654; new thread
             </button>
-
-             <button class = "cb-btn cb-btn-primary" @onclick="Dashboard">
+            @if(IsCurrentUserAdmin)
+            {
+                <button class = "cb-btn cb-btn-primary" @onclick="Dashboard">
                 &#9654; dashboard
             </button>
+
+            }
+             
         </div>
 
     </div>
@@ -124,13 +127,41 @@
     <div class="modal-backdrop" @onclick="CloseThread">
         <div class="modal-box" @onclick:stopPropagation="true">
 
-            <div class="modal-header">
+                        <div class="modal-header">
                 <div>
                     <span class="cb-keyword">topic:</span>
-                    <span class="modal-title">@ActiveThread.Title</span>
+                    @if (editingThread)
+                    {
+                        <input class="compose-text" @bind="EditThreadTitle" />
+                    }
+                    else
+                    {
+                        <span class="modal-title">@ActiveThread.Title</span>
+                    }
                 </div>
+
+                @if (IsAdmin(ActiveThread.ApplicationUser))
+                {
+                    @if (editingThread)
+                    {
+                        <button class="cb-btn cb-btn-primary" @onclick="SaveThreadEdit">spara</button>
+                        <button class="cb-btn" @onclick="CancelEditThread">avbryt</button>
+                    }
+                    else
+                    {
+                        <button class="cb-btn cb-btn-mini" @onclick="StartEditThread">redigera</button>
+                        <button class="cb-btn cb-btn-mini" @onclick="DeleteThreadClick">ta bort</button>
+                    }
+                }
                 <button class="modal-close" @onclick="CloseThread">&times;</button>
             </div>
+
+            @if (editingThread)
+            {
+                <div class="modal-compose">
+                    <textarea class="compose-text" rows="2" @bind="EditThreadContent"></textarea>
+                </div>
+            }
 
             <div class="modal-comments">
                 
@@ -138,20 +169,33 @@
                 {
                     <p class="modal-empty">No comments yet. Be the first.</p>
                 }
-                @foreach (var comment in ActiveThread.Comments)
+                                @foreach (var comment in ActiveThread.Comments)
                 {
                     <div class="modal-comment">
                         <div class="comment-meta">
-                            <div class="comment-avatar">
-                                
-                                <!-- @GetInitials(comment.AuthorId)-->
-
-                            </div>
-                            
+                            <div class="comment-avatar"></div>
                             <span class="comment-author">@comment.ApplicationUser?.UserName</span>
                             <span class="comment-date">@comment.CreatedAt.ToString("yyyy-MM-dd HH:mm")</span>
+
+                            @if (IsAdmin(comment.ApplicationUser))
+                            {
+                                <button class="cb-btn cb-btn-mini" @onclick="() => StartEditComment(comment)">redigera</button>
+                                <button class="cb-btn cb-btn-mini" @onclick="() => DeleteCommentClick(comment)">ta bort</button>
+                            }
                         </div>
-                        <p class="comment-body">@comment.Content</p>
+
+                        @if (editingCommentId == comment.CommentId)
+                        {
+                            <textarea class="compose-text" rows="2" @bind="EditCommentText"></textarea>
+                            <div class="compose-row">
+                                <button class="cb-btn cb-btn-primary" @onclick="() => SaveCommentEdit(comment)">spara</button>
+                                <button class="cb-btn" @onclick="CancelEditComment">avbryt</button>
+                            </div>
+                        }
+                        else
+                        {
+                            <p class="comment-body">@comment.Content</p>
+                        }
                     </div>
                 }
             </div>
@@ -176,6 +220,117 @@
 
 
 @code {
+
+    int? editingCommentId;
+    string EditCommentText = "";
+
+    bool editingThread;
+    string EditThreadTitle = "";
+    string EditThreadContent = "";
+
+    
+        bool IsCurrentUserAdmin => currentUser?.Role == "Admin";
+    bool IsAdmin(ApplicationUser? owner)
+    {
+        return owner is not null && currentUser is not null &&
+            (owner.ApplicationUserId == currentUser.ApplicationUserId || currentUser.Role == "Admin");
+    }
+
+    void StartEditComment(Comment comment)
+    {
+        editingCommentId = comment.CommentId;
+        EditCommentText = comment.Content;
+    }
+
+    void CancelEditComment()
+    {
+        editingCommentId = null;
+        EditCommentText = "";
+    }
+
+    async Task SaveCommentEdit(Comment comment)
+    {
+        if (currentUser is null || string.IsNullOrWhiteSpace(EditCommentText))
+            return;
+
+        try
+        {
+            await ThreadServices.UpdateCommentAsync(comment.CommentId, EditCommentText, currentUser);
+            ActiveThreads = ThreadServices.GetAllThreads();
+            ActiveThread = ActiveThreads.First(t => t.ThreadId == ActiveThread!.ThreadId);
+            CancelEditComment();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Kunde inte spara kommentar: {ex.Message}");
+        }
+    }
+
+    async Task DeleteCommentClick(Comment comment)
+    {
+        if (currentUser is null)
+            return;
+
+        try
+        {
+            await ThreadServices.DeleteCommentAsync(comment.CommentId, currentUser);
+            ActiveThreads = ThreadServices.GetAllThreads();
+            ActiveThread = ActiveThreads.First(t => t.ThreadId == ActiveThread!.ThreadId);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Kunde inte ta bort kommentar: {ex.Message}");
+        }
+    }
+
+    void StartEditThread()
+    {
+        if (ActiveThread is null) return;
+        editingThread = true;
+        EditThreadTitle = ActiveThread.Title;
+        EditThreadContent = ActiveThread.ThreadContent;
+    }
+
+    void CancelEditThread()
+    {
+        editingThread = false;
+    }
+
+    async Task SaveThreadEdit()
+    {
+        if (ActiveThread is null || currentUser is null)
+            return;
+
+        try
+        {
+            await ThreadServices.UpdateThreadAsync(ActiveThread.ThreadId, EditThreadTitle, EditThreadContent, currentUser);
+            ActiveThreads = ThreadServices.GetAllThreads();
+            ActiveThread = ActiveThreads.First(t => t.ThreadId == ActiveThread.ThreadId);
+            editingThread = false;
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Kunde inte spara tråd: {ex.Message}");
+        }
+    }
+
+    async Task DeleteThreadClick()
+    {
+        if (ActiveThread is null || currentUser is null)
+            return;
+
+        try
+        {
+            await ThreadServices.DeleteThreadAsync(ActiveThread.ThreadId, currentUser);
+            ActiveThreads = ThreadServices.GetAllThreads();
+            ActiveThread = null;
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Kunde inte ta bort tråd: {ex.Message}");
+        }
+    }
+    
 
     ThreadItem? ActiveThread;
 
@@ -225,7 +380,7 @@
 
         void Dashboard()
         {
-
+            Nav.NavigateTo("/dashboard");
         }
 
         void CreateThread()

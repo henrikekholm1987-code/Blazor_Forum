@@ -9,7 +9,6 @@ public class Comment
     public DateTime CreatedAt { get; set; }
     public DateTime? UpdatedAt { get; set; }
 
-    //public int AuthorId { get; set; }
     public ApplicationUser ApplicationUser { get; set; } = null!;
 
     public ThreadItem ThreadItem { get; set; } = null!;
