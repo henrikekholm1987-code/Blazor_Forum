@@ -19,9 +19,9 @@
 <div class="home-wrapper">
        <p class="home-subtitle">
         User logged in:
-<NavLink href="@($"/user/{currentUser?.ApplicationUserId}")">
-    @currentUser?.UserName
-</NavLink>
+    <NavLink href="@($"/user/{currentUser?.ApplicationUserId}")">
+        @currentUser?.UserName
+    </NavLink>
     </p>
     
     <h1 class="home-title">Forum</h1>
@@ -53,6 +53,10 @@
             
             <button class="cb-btn cb-btn-primary" @onclick="CreateThread">
                 &#9654; new thread
+            </button>
+
+             <button class = "cb-btn cb-btn-primary" @onclick="Dashboard">
+                &#9654; dashboard
             </button>
         </div>
 
@@ -219,6 +223,11 @@
             }
         }
 
+        void Dashboard()
+        {
+
+        }
+
         void CreateThread()
         {
             NewThreadTitle = "";
@@ -307,16 +316,11 @@
             }
         }
 
-
-
     string GetInitials(string name)
     {
         var parts = name.Trim().Split(' ', StringSplitOptions.RemoveEmptyEntries);
         
-        return parts.Length >= 2
-            ? $"{parts[0][0]}{parts[^1][0]}".ToUpper()
+        return parts.Length >= 2? $"{parts[0][0]}{parts[^1][0]}".ToUpper()
             : name.Length >= 2 ? name[..2].ToUpper() : name.ToUpper();
     }
-    
-  
 }

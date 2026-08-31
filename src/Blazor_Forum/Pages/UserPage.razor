@@ -5,11 +5,13 @@
 <PageTitle>UserPage</PageTitle>
 
 <div class="home-wrapper">
-       <p class="home-subtitle">
+    <p class="home-subtitle">
         Number of gams to move:
     </p>
     
-    <h1 class="home-title">logged in as: @UserId</h1>
+    <!-- <h1 class="home-title">logged in as: @UserId</h1> -->
+
+    <h1 class="home-title">@UserId</h1>
 
     <p class="home-subtitle">
         The discussions listed below are arranged in no particular order.
@@ -24,9 +26,8 @@
         </div>
 
         <div class="cb-actions">
-            
             <button class="cb-btn cb-btn-primary" @onclick="Back">
-                &#9654; back to forum 
+                &#9654; back to forum
             </button>
         </div>
 
@@ -49,21 +50,17 @@
     </div>
 </div>
 
-
-@code {
+@code 
+{
     [Parameter]
     public string? UserId { get; set; }
 
-   
-     protected override async Task OnInitializedAsync()
+    protected override async Task OnInitializedAsync()
     {
-        // Hämtar användardata här
+        
     }
 
     void Back()
     {
-
-
     }
 }
-

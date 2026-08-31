@@ -6,6 +6,7 @@
 @using Entities
 @using Microsoft.AspNetCore.Components.Authorization
 @using Microsoft.AspNetCore.Authorization
+
 @layout Layout.AdminLayout
 
 @inject ApplicationUserService ApplicationUserService
@@ -18,15 +19,14 @@
     </header>
 
     @if (isAdmin)
-    {
-        <section class="cb-card">
+{
+    <div class="cb-dashboard-grid">  
 
+        <section class="cb-card">
             <header class="cb-card-header">
                 <span class="cb-keyword">applications</span>
             </header>
-
             <ul class="cb-list">
-
                 @foreach (var applicationUser in users)
                 {
                     <li class="cb-thread" @onclick="() => OpenAuthor(applicationUser)">
@@ -38,7 +38,48 @@
                 }
             </ul>
         </section>
-    }
+
+        
+        <section class="cb-card">
+            <header class="cb-card-header">
+                <span class="cb-keyword">threads</span>
+            </header>
+            <ul class="cb-list">
+                @foreach (var applicationUser in users)
+                {
+                    <li class="cb-thread" @onclick="() => OpenAuthor(applicationUser)">
+                        <span class="cb-keyword">ApplicationUser</span>
+                        <span class="cb-thread-title">@applicationUser.UserName</span>
+                        <span class="cb-thread-title">@(applicationUser.Threads?.Count.ToString() ?? "0")</span>
+                        <button class="cb-modal-close" @onclick="() => DeleteAuthor(applicationUser)" @onclick:stopPropagation>✕</button>
+                    </li>
+                }
+            </ul>
+
+
+
+
+        </section>
+
+         <section class="cb-card">
+            <header class="cb-card-header">
+                <span class="cb-keyword">threads</span>
+            </header>
+            <ul class="cb-list">
+                @foreach (var applicationUser in users)
+                {
+                    <li class="cb-thread" @onclick="() => OpenAuthor(applicationUser)">
+                        <span class="cb-keyword">ApplicationUser</span>
+                        <span class="cb-thread-title">@applicationUser.UserName</span>
+                        <span class="cb-thread-title">@(applicationUser.Threads?.Count.ToString() ?? "0")</span>
+                        <button class="cb-modal-close" @onclick="() => DeleteAuthor(applicationUser)" @onclick:stopPropagation>✕</button>
+                    </li>
+                }
+            </ul>
+              </section>
+
+    </div>   
+}
     else
     {
         <div class="cb-card" style="padding: 20px; text-align: center;">
@@ -52,8 +93,8 @@
 @code 
 {
     [CascadingParameter]
-    private Task<AuthenticationState>? AuthState { get; set; }
 
+    private Task<AuthenticationState>? AuthState { get; set; }
     private List<ApplicationUser> users = new();
     private bool isAdmin;
 
