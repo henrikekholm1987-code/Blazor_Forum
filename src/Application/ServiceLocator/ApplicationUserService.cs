@@ -43,6 +43,14 @@ public class ApplicationUserService(ApplicationDbContext dbContext)
         dbContext.SaveChanges();
     }
 
+    public ApplicationUser? GetUserDetails(int id)
+    {
+        return dbContext.ApplicationUsers
+            .Include(u => u.Threads)
+            .Include(u => u.Comments)
+            .FirstOrDefault(u => u.ApplicationUserId == id);
+    }
+
 
     public void DeleteAuthor(ApplicationUser user)
     {

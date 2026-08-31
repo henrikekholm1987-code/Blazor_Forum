@@ -1,63 +1,76 @@
 @page "/user/{UserId}"
 @attribute [Authorize]
 @using Microsoft.AspNetCore.Authorization
+@using Microsoft.AspNetCore.Components.Authorization
+@using Application.ServiceLocator
+@using Entities
 
-<PageTitle>UserPage</PageTitle>
+@inject ApplicationUserService UserService
+
+<PageTitle>Profil</PageTitle>
 
 <div class="home-wrapper">
-    <p class="home-subtitle">
-        Number of gams to move:
-    </p>
 
-    <h1 class="home-title">@UserId</h1>
+    @if (profileUser is null)
+    {
+        <p class="home-subtitle">Användaren hittades inte.</p>
+    }
+    else
+    {
+        <h1 class="home-title">@profileUser.UserName</h1>
+        <p class="home-subtitle">
+            Roll: @profileUser.Role &middot;
+            @profileUser.Threads.Count trådar &middot;
+            @profileUser.Comments.Count kommentarer
+        </p>
 
-    <p class="home-subtitle">
-        The discussions listed below are arranged in no particular order.
-        Some may be useful.
-        Others may simply exist.
-    </p>
+        <div class="cb-card">
+            <div class="cb-card-header">
+                <span class="cb-keyword">trådar</span>
+            </div>
 
-    <div class="cb-card">
-
-        <div class="cb-card-header">
-            <span class="cb-keyword">threads</span>
+            @if (!profileUser.Threads.Any())
+            {
+                <p class="modal-empty">Inga trådar än.</p>
+            }
+            else
+            {
+                <ul class="cb-list">
+                    @foreach (var thread in profileUser.Threads)
+                    {
+                        <li class="cb-thread">
+                            <span class="cb-keyword">topic:</span>
+                            <span class="cb-thread-title">@thread.Title</span>
+                        </li>
+                    }
+                </ul>
+            }
         </div>
+    }
 
-        <div class="cb-actions">
-            <button class="cb-btn cb-btn-primary" @onclick="Back">
-                &#9654; back to forum
-            </button>
-        </div>
-
+    <div class="cb-actions" style="margin-top: 1rem;">
+        <button class="cb-btn cb-btn-primary" @onclick="Back">
+            &#9654; back to forum
+        </button>
     </div>
 
-    <div class="cb-canvas">
-        <div class="cb-block">
-            <span class="cb-keyword">if</span>
-            something should be discussed:
-            <div class="cb-announce">
-                <span class="cb-keyword">then</span>
-                <span class="cb-string">"create a thread"</span>
-            </div>
-            <div class="cb-else-label">else:</div>
-            <div class="cb-announce">
-                <span class="cb-keyword">then</span>
-                <span class="cb-string">"observe existing threads"</span>
-            </div>
-        </div>
-    </div>
 </div>
 
-@code 
-{
+@code {
     [Parameter]
     public string? UserId { get; set; }
-     [Inject]
+
+    [Inject]
     public required NavigationManager Nav { get; set; }
 
-    protected override async Task OnInitializedAsync()
+    ApplicationUser? profileUser;
+
+    protected override void OnParametersSet()
     {
-        
+        if (UserId is not null && int.TryParse(UserId, out var id))
+        {
+            profileUser = UserService.GetUserDetails(id);
+        }
     }
 
     void Back()
