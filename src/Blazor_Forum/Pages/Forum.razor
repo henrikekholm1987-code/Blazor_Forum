@@ -4,6 +4,7 @@
 @using Microsoft.AspNetCore.Authorization
 
 @inject AuthService AuthServices
+
 @inject ApplicationUserService UserService
 @inject ThreadServices ThreadServices
 
@@ -104,11 +105,9 @@
             </div>
 
             <div class="modal-compose">
-                <textarea class="compose-text"
-                          rows="2"
-                          placeholder="text of topic..."
-                          @bind="NewThreadContent">
-                </textarea>
+                 
+               
+
                 <div class="compose-row">
                     <button class="cb-btn cb-btn-primary"
                             @onclick="PostThread"
@@ -169,11 +168,11 @@
                 {
                     <p class="modal-empty">No comments yet. Be the first.</p>
                 }
-                                @foreach (var comment in ActiveThread.Comments)
+                 @foreach (var comment in ActiveThread.Comments)
                 {
                     <div class="modal-comment">
                         <div class="comment-meta">
-                            <div class="comment-avatar"></div>
+                            <div class="comment-avatar">@GetInitials(comment.ApplicationUser?.UserName??"?")</div>
                             <span class="comment-author">@comment.ApplicationUser?.UserName</span>
                             <span class="comment-date">@comment.CreatedAt.ToString("yyyy-MM-dd HH:mm")</span>
 
@@ -188,8 +187,8 @@
                         {
                             <textarea class="compose-text" rows="2" @bind="EditCommentText"></textarea>
                             <div class="compose-row">
-                                <button class="cb-btn cb-btn-primary" @onclick="() => SaveCommentEdit(comment)">spara</button>
-                                <button class="cb-btn" @onclick="CancelEditComment">avbryt</button>
+                                <button class="cb-btn cb-btn-mini cb-btn-primary" @onclick="() => SaveCommentEdit(comment)">spara</button>
+                                <button class="cb-btn cb-btn-mini" @onclick="CancelEditComment">avbryt</button>
                             </div>
                         }
                         else
@@ -200,11 +199,13 @@
                 }
             </div>
             <div class="modal-compose">
+
     <textarea class="compose-text"
               rows="2"
               placeholder="Add a comment..."
               @bind="NewCommentText">
     </textarea>
+
     <div class="compose-row">
         <button class="cb-btn cb-btn-primary"
                 @onclick="PostComment"
@@ -229,7 +230,8 @@
     string EditThreadContent = "";
 
     
-        bool IsCurrentUserAdmin => currentUser?.Role == "Admin";
+    bool IsCurrentUserAdmin => currentUser?.Role == "Admin";
+
     bool IsAdmin(ApplicationUser? owner)
     {
         return owner is not null && currentUser is not null &&
@@ -352,8 +354,7 @@
         currentUser is null;
 
     bool IsThreadPostDisabled =>
-        string.IsNullOrWhiteSpace(NewThreadTitle) ||
-        string.IsNullOrWhiteSpace(NewThreadContent);
+        string.IsNullOrWhiteSpace(NewThreadTitle);
    
         
     List<ThreadItem> ActiveThreads = new();
@@ -438,9 +439,9 @@
             }
             catch (Exception ex)
             {
-             Console.WriteLine($"FEEL vid trådskapande: {ex.GetType().Name}: {ex.Message}");
-                        if (ex.InnerException != null)
-                            Console.WriteLine($"Inner: {ex.InnerException.Message}");
+                Console.WriteLine($"FEEL vid trådskapande: {ex.GetType().Name}: {ex.Message}");
+        
+                if (ex.InnerException != null) Console.WriteLine($"Inner: {ex.InnerException.Message}");
             }
         }
 

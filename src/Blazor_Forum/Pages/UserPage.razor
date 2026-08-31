@@ -52,6 +52,8 @@
 {
     [Parameter]
     public string? UserId { get; set; }
+     [Inject]
+    public required NavigationManager Nav { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
@@ -60,5 +62,6 @@
 
     void Back()
     {
+        Nav.NavigateTo("/forum");
     }
 }

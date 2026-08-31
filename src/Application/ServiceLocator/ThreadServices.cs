@@ -11,10 +11,7 @@ public class ThreadServices
     public ThreadServices(ApplicationDbContext dbContext)
     {
         _dbContext = dbContext;
-    }
-    
-    string NewThreadTitle = "";
-    string NewThreadContent = "";
+    } 
     
     public List<ThreadItem> GetAllThreads()
     {
@@ -63,8 +60,9 @@ public class ThreadServices
 
         EnsureOwnerOrAdmin(thread.ApplicationUser, requestingUser);
 
-        thread.Title = title.Trim();
         thread.ThreadContent = content.Trim();
+        thread.Title = title.Trim();
+        
 
         ValidateThread(thread);
 
@@ -95,7 +93,8 @@ public class ThreadServices
         if (!isOwner && !isAdmin)
             throw new UnauthorizedAccessException("Inte din tråd");
     }
-    public async Task<Comment> UpdateCommentAsync(int commentId, string content, ApplicationUser requestingUser)
+
+    public async Task<Comment> UpdateCommentAsync(int commentId,string content, ApplicationUser requestingUser)
     {
         var comment = await _dbContext.Comments
             .Include(c => c.ApplicationUser)
@@ -105,6 +104,7 @@ public class ThreadServices
             throw new KeyNotFoundException("Kommentaren hittades inte.");
 
         EnsureOwnerOrAdmin(comment.ApplicationUser, requestingUser);
+
 
         comment.Content = content.Trim();
         comment.UpdatedAt = DateTime.Now;
@@ -150,7 +150,6 @@ public class ThreadServices
         if (thread.Title.Length > 200)
             throw new ArgumentException("Titeln är för lång (max 200 tecken).", nameof(thread.Title));
 
-        if (string.IsNullOrWhiteSpace(thread.ThreadContent))
-            throw new ArgumentException("Innehållet får inte vara tomt.", nameof(thread.ThreadContent));
+     
     }
 }
