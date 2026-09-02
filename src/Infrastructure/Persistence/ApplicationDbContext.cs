@@ -16,7 +16,7 @@ public class  ApplicationDbContext : DbContext
     {
         base.OnModelCreating(modelBuilder);
 
-        // User
+        
         modelBuilder.Entity<ApplicationUser>()
             .HasKey(u => u.ApplicationUserId);
 
@@ -24,33 +24,37 @@ public class  ApplicationDbContext : DbContext
             .HasIndex(u => u.UserName)
             .IsUnique();
 
-        // Thread
+        
         modelBuilder.Entity<ThreadItem>()
             .HasKey(t => t.ThreadId);
 
         modelBuilder.Entity<ThreadItem>()
             .HasOne(t => t.ApplicationUser)
             .WithMany(u => u.Threads)
-            //.HasForeignKey(t => t.AuthorId)
+            
             .IsRequired()
             .OnDelete(DeleteBehavior.Cascade);
 
-        // Comment
         modelBuilder.Entity<Comment>()
             .HasKey(c => c.CommentId);
 
         modelBuilder.Entity<Comment>()
             .HasOne(c => c.ApplicationUser)
             .WithMany(u => u.Comments)
-            //.HasForeignKey(c => c.AuthorId)
             .IsRequired()
             .OnDelete(DeleteBehavior.Cascade);
 
         modelBuilder.Entity<Comment>()
             .HasOne(c => c.ThreadItem)
             .WithMany(t => t.Comments)
-            // .HasForeignKey(c => c.ThreadItemId)
             .IsRequired()
             .OnDelete(DeleteBehavior.Cascade);
+
+        modelBuilder.Entity<Comment>()
+           .HasOne(c => c.ParentComment)
+           .WithMany(c => c.Replies)
+           .HasForeignKey(c => c.ParentCommentId)
+           .IsRequired(false)
+           .OnDelete(DeleteBehavior.Restrict);
     }
 }

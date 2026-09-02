@@ -122,12 +122,31 @@ public class ThreadServices
             .FirstOrDefaultAsync(c => c.CommentId == commentId);
 
         if (comment is null)
-            throw new KeyNotFoundException("Kommentaren hittades inte.");
+            throw new KeyNotFoundException("NO kommentar.");
 
         EnsureOwnerOrAdmin(comment.ApplicationUser, requestingUser);
 
-        _dbContext.Comments.Remove(comment);
+        await DeleteCommentWithRepliesAsync(commentId);
         await _dbContext.SaveChangesAsync();
+    }
+
+    private async Task DeleteCommentWithRepliesAsync(int commentId)
+    {
+        var replyIds = await _dbContext.Comments
+            .Where(c => c.ParentCommentId == commentId)
+            .Select(c => c.CommentId)
+            .ToListAsync();
+
+        foreach (var replyId in replyIds)
+        {
+            await DeleteCommentWithRepliesAsync(replyId);
+        }
+
+        var comment = await _dbContext.Comments.FindAsync(commentId);
+        if (comment is not null)
+        {
+            _dbContext.Comments.Remove(comment);
+        }
     }
 
     private static void ValidateComment(Comment comment)

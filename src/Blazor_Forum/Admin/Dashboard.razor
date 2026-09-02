@@ -39,45 +39,6 @@
             </ul>
         </section>
 
-        
-        <section class="cb-card">
-            <header class="cb-card-header">
-                <span class="cb-keyword">threads</span>
-            </header>
-            <ul class="cb-list">
-                @foreach (var applicationUser in users)
-                {
-                    <li class="cb-thread" @onclick="() => OpenAuthor(applicationUser)">
-                        <span class="cb-keyword">ApplicationUser</span>
-                        <span class="cb-thread-title">@applicationUser.UserName</span>
-                        <span class="cb-thread-title">@(applicationUser.Threads?.Count.ToString() ?? "0")</span>
-                        <button class="cb-modal-close" @onclick="() => DeleteAuthor(applicationUser)" @onclick:stopPropagation>✕</button>
-                    </li>
-                }
-            </ul>
-
-
-
-
-        </section>
-
-         <section class="cb-card">
-            <header class="cb-card-header">
-                <span class="cb-keyword">threads</span>
-            </header>
-            <ul class="cb-list">
-                @foreach (var applicationUser in users)
-                {
-                    <li class="cb-thread" @onclick="() => OpenAuthor(applicationUser)">
-                        <span class="cb-keyword">ApplicationUser</span>
-                        <span class="cb-thread-title">@applicationUser.UserName</span>
-                        <span class="cb-thread-title">@(applicationUser.Threads?.Count.ToString() ?? "0")</span>
-                        <button class="cb-modal-close" @onclick="() => DeleteAuthor(applicationUser)" @onclick:stopPropagation>✕</button>
-                    </li>
-                }
-            </ul>
-              </section>
-
     </div>   
 }
     else

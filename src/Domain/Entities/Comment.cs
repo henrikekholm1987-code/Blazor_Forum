@@ -12,4 +12,8 @@ public class Comment
     public ApplicationUser ApplicationUser { get; set; } = null!;
 
     public ThreadItem ThreadItem { get; set; } = null!;
+
+    public int? ParentCommentId { get; set; }
+    public Comment? ParentComment { get; set; }
+    public List<Comment> Replies { get; set; } = new();
 }

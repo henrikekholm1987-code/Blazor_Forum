@@ -1,16 +1,16 @@
 ﻿@page "/forum"
 
 @attribute [Authorize]
-@using Microsoft.AspNetCore.Authorization
 
 @inject AuthService AuthServices
-
 @inject ApplicationUserService UserService
 @inject ThreadServices ThreadServices
 
+@using Microsoft.AspNetCore.Authorization
 @using Microsoft.AspNetCore.Components.Authorization
 @using Application.Auth
 @using Application.ServiceLocator
+@using Blazor_Forum.Modal
 
 @using Entities
 
@@ -161,38 +161,27 @@
 
             <div class="modal-comments">
                 
-                @if (ActiveThread.Comments is null || !ActiveThread.Comments.Any())
+                                @if (ActiveThread.Comments is null || !ActiveThread.Comments.Any())
                 {
                     <p class="modal-empty">No comments yet. Be the first.</p>
                 }
-                 @foreach (var comment in ActiveThread.Comments)
+                @foreach (var comment in GetRootComments(ActiveThread))
                 {
-                    <div class="modal-comment">
-                        <div class="comment-meta">
-                            <div class="comment-avatar">@GetInitials(comment.ApplicationUser?.UserName??"?")</div>
-                            <span class="comment-author">@comment.ApplicationUser?.UserName</span>
-                            <span class="comment-date">@comment.CreatedAt.ToString("yyyy-MM-dd HH:mm")</span>
-
-                            @if (IsAdmin(comment.ApplicationUser))
-                            {
-                                <button class="cb-btn cb-btn-mini" @onclick="() => StartEditComment(comment)">redigera</button>
-                                <button class="cb-btn cb-btn-mini" @onclick="() => DeleteCommentClick(comment)">ta bort</button>
-                            }
-                        </div>
-
-                        @if (editingCommentId == comment.CommentId)
-                        {
-                            <textarea class="compose-text" rows="2" @bind="EditCommentText"></textarea>
-                            <div class="compose-row">
-                                <button class="cb-btn cb-btn-mini cb-btn-primary" @onclick="() => SaveCommentEdit(comment)">spara</button>
-                                <button class="cb-btn cb-btn-mini" @onclick="CancelEditComment">avbryt</button>
-                            </div>
-                        }
-                        else
-                        {
-                            <p class="comment-body">@comment.Content</p>
-                        }
-                    </div>
+                    <CommentNode Comment="comment"
+                                 Thread="ActiveThread"
+                                 IsAdmin="IsAdmin"
+                                 GetInitials="GetInitials"
+                                 EditingCommentId="editingCommentId"
+                                 @bind-EditCommentText="EditCommentText"
+                                 ReplyingToCommentId="replyingToCommentId"
+                                 @bind-ReplyText="ReplyText"
+                                 OnEdit="@((Comment c) => StartEditComment(c))"
+                                 OnDelete="@((Comment c) => DeleteCommentClick(c))"
+                                 OnSaveEdit="@((Comment c) => SaveCommentEdit(c))"
+                                 OnCancelEdit="CancelEditComment"
+                                 OnReply="@((Comment c) => StartReply(c))"
+                                 OnCancelReply="CancelReply"
+                                 OnPostReply="@((Comment c) => PostReply(c))" />
                 }
             </div>
             <div class="modal-compose">
@@ -215,9 +204,54 @@
    </div>
 }
 
+@code
+{
+        int? replyingToCommentId;
+    string ReplyText = "";
 
+    void StartReply(Comment comment)
+    {
+        replyingToCommentId = comment.CommentId;
+        ReplyText = "";
+    }
 
-@code {
+    void CancelReply()
+    {
+        replyingToCommentId = null;
+        ReplyText = "";
+    }
+
+    async Task PostReply(Comment parentComment)
+    {
+        if (currentUser is null || string.IsNullOrWhiteSpace(ReplyText))
+            return;
+
+        var reply = new Comment
+        {
+            Content = ReplyText.Trim(),
+            CreatedAt = DateTime.Now,
+            ApplicationUser = currentUser,
+            ThreadItem = ActiveThread!,
+            ParentCommentId = parentComment.CommentId
+        };
+
+        try
+        {
+            await ThreadServices.CreateCommentAsync(reply);
+            ActiveThreads = ThreadServices.GetAllThreads();
+            ActiveThread = ActiveThreads.First(t => t.ThreadId == ActiveThread!.ThreadId);
+            CancelReply();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Kunde inte posta svar: {ex.Message}");
+        }
+    }
+     List<Comment> GetRootComments(ThreadItem thread) =>
+       thread.Comments!.Where(c => c.ParentCommentId == null).OrderBy(c => c.CreatedAt).ToList();
+
+    List<Comment> GetReplies(ThreadItem thread, int parentCommentId) =>
+        thread.Comments!.Where(c => c.ParentCommentId == parentCommentId).OrderBy(c => c.CreatedAt).ToList();
 
     int? editingCommentId;
     string EditCommentText = "";

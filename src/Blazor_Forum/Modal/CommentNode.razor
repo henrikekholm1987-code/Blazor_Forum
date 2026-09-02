@@ -1,0 +1,98 @@
+@using Entities
+
+<div class="modal-comment">
+    <div class="comment-meta">
+        <div class="comment-avatar">@GetInitials(Comment.ApplicationUser?.UserName ?? "?")</div>
+        <span class="comment-author">@Comment.ApplicationUser?.UserName</span>
+        <span class="comment-date">@Comment.CreatedAt.ToString("yyyy-MM-dd HH:mm")</span>
+
+        @if (IsAdmin(Comment.ApplicationUser))
+        {
+            <button class="cb-btn cb-btn-mini" @onclick="() => OnEdit.InvokeAsync(Comment)">redigera</button>
+            <button class="cb-btn cb-btn-mini" @onclick="() => OnDelete.InvokeAsync(Comment)">ta bort</button>
+        }
+        <button class="cb-btn cb-btn-mini" @onclick="() => OnReply.InvokeAsync(Comment)">svara</button>
+    </div>
+
+    @if (EditingCommentId == Comment.CommentId)
+    {
+        <textarea class="compose-text" rows="2" 
+        @bind:get="EditCommentText"
+        @bind:set="(v) => EditCommentTextChanged.InvokeAsync(v)"></textarea>
+        <div class="compose-row">
+            <button class="cb-btn cb-btn-mini cb-btn-primary" @onclick="() => OnSaveEdit.InvokeAsync(Comment)">spara</button>
+            <button class="cb-btn cb-btn-mini" @onclick="OnCancelEdit">avbryt</button>
+        </div>
+    }
+    else
+    {
+        <p class="comment-body">@Comment.Content</p>
+    }
+
+    @if (ReplyingToCommentId == Comment.CommentId)
+    {
+        <div class="compose-row" style="margin-left: 1.5rem;">
+            <textarea class="compose-text" rows="2" placeholder="Skriv ett svar..."
+            @bind:get="ReplyText"
+            @bind:set="(v) => ReplyTextChanged.InvokeAsync(v)"></textarea>
+
+
+            <button class="cb-btn cb-btn-mini cb-btn-primary" @onclick="() => OnPostReply.InvokeAsync(Comment)">svara</button>
+            <button class="cb-btn cb-btn-mini" @onclick="OnCancelReply">avbryt</button>
+        </div>
+    }
+
+    @{
+        var replies = Thread.Comments!.Where(c => c.ParentCommentId == Comment.CommentId).OrderBy(c => c.CreatedAt).ToList();
+    }
+
+    @if (replies.Any())
+    {
+        <div style="margin-left: 1.5rem; border-left: 2px solid #333; padding-left: 0.75rem;">
+            @foreach (var reply in replies)
+            {
+                <CommentNode Comment="reply"
+                             Thread="Thread"
+                             IsAdmin="IsAdmin"
+                             GetInitials="GetInitials"
+                             EditingCommentId="EditingCommentId"
+                             EditCommentText="EditCommentText"
+                             EditCommentTextChanged="EditCommentTextChanged"
+                             ReplyingToCommentId="ReplyingToCommentId"
+                             ReplyText="ReplyText"
+                             ReplyTextChanged="ReplyTextChanged"
+                             OnEdit="OnEdit"
+                             OnDelete="OnDelete"
+                             OnSaveEdit="OnSaveEdit"
+                             OnCancelEdit="OnCancelEdit"
+                             OnReply="OnReply"
+                             OnCancelReply="OnCancelReply"
+                             OnPostReply="OnPostReply" />
+            }
+        </div>
+    }
+</div>
+
+@code {
+    [Parameter, EditorRequired] public Comment Comment { get; set; } = null!;
+    [Parameter, EditorRequired] public ThreadItem Thread { get; set; } = null!;
+
+    [Parameter, EditorRequired] public Func<ApplicationUser?, bool> IsAdmin { get; set; } = null!;
+    [Parameter, EditorRequired] public Func<string, string> GetInitials { get; set; } = null!;
+
+    [Parameter] public int? EditingCommentId { get; set; }
+    [Parameter] public string EditCommentText { get; set; } = "";
+    [Parameter] public EventCallback<string> EditCommentTextChanged { get; set; }
+
+    [Parameter] public int? ReplyingToCommentId { get; set; }
+    [Parameter] public string ReplyText { get; set; } = "";
+    [Parameter] public EventCallback<string> ReplyTextChanged { get; set; }
+
+    [Parameter, EditorRequired] public EventCallback<Comment> OnEdit { get; set; }
+    [Parameter, EditorRequired] public EventCallback<Comment> OnDelete { get; set; }
+    [Parameter, EditorRequired] public EventCallback<Comment> OnSaveEdit { get; set; }
+    [Parameter, EditorRequired] public EventCallback OnCancelEdit { get; set; }
+    [Parameter, EditorRequired] public EventCallback<Comment> OnReply { get; set; }
+    [Parameter, EditorRequired] public EventCallback OnCancelReply { get; set; }
+    [Parameter, EditorRequired] public EventCallback<Comment> OnPostReply { get; set; }
+}
