@@ -19,6 +19,7 @@ public class ThreadServices
             .Include(t => t.ApplicationUser)
             .Include(t => t.Comments)
                 .ThenInclude(c => c.ApplicationUser)
+                .OrderByDescending(t => t.CreatedAt)
             .ToList();
     }
 
