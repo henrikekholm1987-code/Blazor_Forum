@@ -10,6 +10,8 @@ public class ApplicationUser
 
     public string Role { get; set; } = "User";
 
+    public string? Bio { get; set; }
+
     public List<Comment> Comments { get; set; } = new();
     public List<ThreadItem> Threads { get; set; } = new();
 

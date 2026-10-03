@@ -43,6 +43,15 @@ public class ApplicationUserService(ApplicationDbContext dbContext)
         dbContext.SaveChanges();
     }
 
+    public void UpdateBio(int userId, string? bio)
+    {
+        var user = dbContext.ApplicationUsers.FirstOrDefault(u => u.ApplicationUserId == userId);
+        if (user is null) return;
+
+        user.Bio = bio;
+        dbContext.SaveChanges();
+    }
+
     public ApplicationUser? GetUserDetails(int id)
     {
         return dbContext.ApplicationUsers
@@ -50,7 +59,6 @@ public class ApplicationUserService(ApplicationDbContext dbContext)
             .Include(u => u.Comments)
             .FirstOrDefault(u => u.ApplicationUserId == id);
     }
-
 
     public void DeleteAuthor(ApplicationUser user)
     {

@@ -24,14 +24,12 @@ public class  ApplicationDbContext : DbContext
             .HasIndex(u => u.UserName)
             .IsUnique();
 
-        
         modelBuilder.Entity<ThreadItem>()
             .HasKey(t => t.ThreadId);
 
         modelBuilder.Entity<ThreadItem>()
             .HasOne(t => t.ApplicationUser)
             .WithMany(u => u.Threads)
-            
             .IsRequired()
             .OnDelete(DeleteBehavior.Cascade);
 
