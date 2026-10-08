@@ -56,7 +56,7 @@ public class  ApplicationDbContext : DbContext
            .OnDelete(DeleteBehavior.Restrict);
 
         modelBuilder.Entity<Category>()
-    .HasKey(c => c.CategoryId);
+            .HasKey(c => c.CategoryId);
 
         modelBuilder.Entity<ThreadItem>()
             .HasOne(t => t.Category)
