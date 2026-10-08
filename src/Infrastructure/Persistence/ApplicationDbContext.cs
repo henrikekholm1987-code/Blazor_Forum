@@ -16,7 +16,6 @@ public class  ApplicationDbContext : DbContext
     {
         base.OnModelCreating(modelBuilder);
 
-        
         modelBuilder.Entity<ApplicationUser>()
             .HasKey(u => u.ApplicationUserId);
 

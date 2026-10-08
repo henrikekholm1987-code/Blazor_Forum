@@ -34,6 +34,7 @@ public class ApplicationUserService(ApplicationDbContext dbContext)
         dbContext.Add(user);
         dbContext.SaveChanges();
 
+
         return user;
     }
 

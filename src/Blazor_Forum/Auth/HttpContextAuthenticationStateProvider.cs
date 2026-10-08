@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Http;
 
 
-
 public class HttpContextAuthenticationStateProvider : AuthenticationStateProvider
 {
     private readonly AuthenticationState _authenticationState;

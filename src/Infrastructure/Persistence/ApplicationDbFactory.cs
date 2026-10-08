@@ -9,8 +9,6 @@ public class ApplicationDbFactory
     public ApplicationDbContext CreateDbContext(string[] args)
     {
         var optionsBuilder = new DbContextOptionsBuilder<ApplicationDbContext>();
-
-      
         optionsBuilder.UseSqlite("Data Source=../Blazor_Forum/sqlite_forum.db");
         return new ApplicationDbContext(optionsBuilder.Options);
     }
