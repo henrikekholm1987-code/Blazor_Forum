@@ -15,7 +15,7 @@ namespace Infrastructure.Migrations
         protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
-            modelBuilder.HasAnnotation("ProductVersion", "8.0.30");
+            modelBuilder.HasAnnotation("ProductVersion", "8.0.31");
 
             modelBuilder.Entity("Entities.ApplicationUser", b =>
                 {
@@ -44,6 +44,38 @@ namespace Infrastructure.Migrations
                         .IsUnique();
 
                     b.ToTable("ApplicationUsers");
+                });
+
+            modelBuilder.Entity("Entities.Category", b =>
+                {
+                    b.Property<int>("CategoryId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("CategoryId");
+
+                    b.ToTable("Categories");
+
+                    b.HasData(
+                        new
+                        {
+                            CategoryId = 1,
+                            Name = "Genereal"
+                        },
+                        new
+                        {
+                            CategoryId = 2,
+                            Name = "Openings"
+                        },
+                        new
+                        {
+                            CategoryId = 3,
+                            Name = "Events"
+                        });
                 });
 
             modelBuilder.Entity("Entities.Comment", b =>
@@ -91,6 +123,9 @@ namespace Infrastructure.Migrations
                     b.Property<int>("ApplicationUserId")
                         .HasColumnType("INTEGER");
 
+                    b.Property<int?>("CategoryId")
+                        .HasColumnType("INTEGER");
+
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("TEXT");
 
@@ -105,6 +140,8 @@ namespace Infrastructure.Migrations
                     b.HasKey("ThreadId");
 
                     b.HasIndex("ApplicationUserId");
+
+                    b.HasIndex("CategoryId");
 
                     b.ToTable("ThreadItems");
                 });
@@ -143,13 +180,25 @@ namespace Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("Entities.Category", "Category")
+                        .WithMany("Threads")
+                        .HasForeignKey("CategoryId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
                     b.Navigation("ApplicationUser");
+
+                    b.Navigation("Category");
                 });
 
             modelBuilder.Entity("Entities.ApplicationUser", b =>
                 {
                     b.Navigation("Comments");
 
+                    b.Navigation("Threads");
+                });
+
+            modelBuilder.Entity("Entities.Category", b =>
+                {
                     b.Navigation("Threads");
                 });
 
