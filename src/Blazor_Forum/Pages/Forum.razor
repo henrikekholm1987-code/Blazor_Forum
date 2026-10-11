@@ -33,13 +33,22 @@
 
     <div class="cb-card">
 
-        <div class="cb-card-header">
-            <span class="cb-keyword">threads</span>
+        <div class="cb-card-header cb-tabs" style="display:flex; flex-wrap:wrap; gap:6px 16px; font-size:13px;">>
+            
+                <span class="cb-keyword cb-clickable @(SelectedCategoryId is null ? "cb-active" : "")"
+                      @onclick="() => SelectedCategoryId = null">all</span>
+
+                @foreach (var category in Categories)
+                {
+                    <span class="cb-keyword cb-clickable @(SelectedCategoryId == category.CategoryId ? "cb-active" : "")"
+                          @onclick="() => SelectedCategoryId = category.CategoryId">@category.Name.ToLower()</span>
+                }
+            
         </div>
 
         <div class="threads-carousel">
            
-            @foreach (var thread in ActiveThreads)
+            @foreach (var thread in VisibleThreads)
             {
                 <div class="cb-thread" @onclick="() => OpenThread(thread)">
                     <span class="cb-keyword">topic:</span>
@@ -102,6 +111,7 @@
                           placeholder="topic title..."
                           @bind="NewThreadTitle">
                 </textarea>
+      
             </div>
 
             <div class="modal-compose">
@@ -123,7 +133,7 @@
     <div class="modal-backdrop" @onclick="CloseThread">
         <div class="modal-box" @onclick:stopPropagation="true">
 
-                        <div class="modal-header">
+                <div class="modal-header">
                 <div>
                     <span class="cb-keyword">topic:</span>
                     @if (editingThread)
@@ -161,7 +171,7 @@
 
             <div class="modal-comments">
                 
-                                @if (ActiveThread.Comments is null || !ActiveThread.Comments.Any())
+                @if (ActiveThread.Comments is null || !ActiveThread.Comments.Any())
                 {
                     <p class="modal-empty">No comments yet. Be the first.</p>
                 }
@@ -206,7 +216,7 @@
 
 @code
 {
-        int? replyingToCommentId;
+    int? replyingToCommentId;
     string ReplyText = "";
 
     void StartReply(Comment comment)
@@ -385,19 +395,30 @@
         currentUser is null;
 
     bool IsThreadPostDisabled =>
-        string.IsNullOrWhiteSpace(NewThreadTitle);
+        string.IsNullOrWhiteSpace(NewThreadTitle) || NewThreadCategoryId is null;
    
         
     List<ThreadItem> ActiveThreads = new();
 
-        [CascadingParameter]
-        private Task<AuthenticationState>? AuthState { get; set; }
+    List<Category> Categories = new();
+    int? NewThreadCategoryId;
+    int? SelectedCategoryId;
 
-        ApplicationUser? currentUser;
+    IEnumerable<ThreadItem> VisibleThreads =>
+        SelectedCategoryId is null
+            ? ActiveThreads
+            : ActiveThreads.Where(t => t.CategoryId == SelectedCategoryId);
+
+    [CascadingParameter]
+    private Task<AuthenticationState>? AuthState { get; set; }
+
+    ApplicationUser? currentUser;
 
         protected override async Task OnInitializedAsync()
         {
             ActiveThreads = ThreadServices.GetAllThreads();
+
+            Categories = ThreadServices.GetAllCategories();
 
             if (AuthState is not null)
             {
@@ -417,6 +438,8 @@
 
         void CreateThread()
         {
+            //NewThreadCategoryId = null;
+            NewThreadCategoryId = SelectedCategoryId;
             NewThreadTitle = "";
             NewThreadContent = "";
             creationOfThread = true;
@@ -453,6 +476,7 @@
                 Title = NewThreadTitle.Trim(),
                 ThreadContent = NewThreadContent.Trim(),
                 CreatedAt = DateTime.Now,
+            CategoryId = NewThreadCategoryId,
                 ApplicationUser = currentUser,
                 Comments = new List<Comment>()
             };

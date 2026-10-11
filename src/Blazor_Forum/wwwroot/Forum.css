@@ -11,9 +11,21 @@
 .home-subtitle a.active {
     font-weight: bold;
 }
+.cb-tabs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px 18px;
+}
 
 .cb-thread:hover {
     background: #efeee9;
+}
+.cb-clickable {
+    cursor: pointer;
+}
+
+.cb-active {
+    text-decoration: underline;
 }
 
 .cb-thread-title {

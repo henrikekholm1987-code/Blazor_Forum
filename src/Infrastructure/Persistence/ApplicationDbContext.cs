@@ -66,9 +66,11 @@ public class  ApplicationDbContext : DbContext
             .OnDelete(DeleteBehavior.SetNull);
 
         modelBuilder.Entity<Category>().HasData(
-            new Category { CategoryId = 1, Name = "Genereal" },
+            new Category { CategoryId = 1, Name = "General" },
             new Category { CategoryId = 2, Name = "Openings" },
-            new Category { CategoryId = 3, Name = "Events" });
+            new Category { CategoryId = 3, Name = "Middlegame" },
+            new Category { CategoryId = 4, Name = "Endgame" },
+            new Category { CategoryId = 5, Name = "Tactics" });
 
     }
 }

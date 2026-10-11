@@ -64,7 +64,7 @@ namespace Infrastructure.Migrations
                         new
                         {
                             CategoryId = 1,
-                            Name = "Genereal"
+                            Name = "General"
                         },
                         new
                         {
@@ -74,7 +74,17 @@ namespace Infrastructure.Migrations
                         new
                         {
                             CategoryId = 3,
-                            Name = "Events"
+                            Name = "Middlegame"
+                        },
+                        new
+                        {
+                            CategoryId = 4,
+                            Name = "Endgame"
+                        },
+                        new
+                        {
+                            CategoryId = 5,
+                            Name = "Tactics"
                         });
                 });
 
