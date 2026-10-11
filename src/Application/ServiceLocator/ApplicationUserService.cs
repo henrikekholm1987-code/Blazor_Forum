@@ -38,6 +38,11 @@ public class ApplicationUserService(ApplicationDbContext dbContext)
         return user;
     }
 
+    public bool UserNameExists(string username)
+    {
+        return dbContext.ApplicationUsers.Any(u => u.UserName == username);
+    }
+
     public void SetRole(ApplicationUser user, string role)
     {
         user.Role = role;

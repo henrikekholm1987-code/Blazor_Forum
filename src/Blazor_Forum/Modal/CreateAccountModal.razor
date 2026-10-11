@@ -36,6 +36,11 @@
                        type="password"
                        placeholder="confirm password"
                        @bind="ConfirmPassword" />
+
+                        @if (!string.IsNullOrEmpty(ErrorMessage))
+                        {
+                            <span style="color:#b00020; font-size:13px;">@ErrorMessage</span>
+                        }
                 <button class="cb-btn cb-btn-primary create-account-submit"
                         @onclick="Submit"
                         disabled="@IsDisabled">
@@ -52,6 +57,7 @@
     string Username = "";
     string Password = "";
     string ConfirmPassword = "";
+    string ErrorMessage = "";
 
     bool IsDisabled =>
         string.IsNullOrWhiteSpace(Username) ||
@@ -79,11 +85,16 @@
 
     private void Submit()
     {
-        UserService.CreateUser(Username.Trim(), Password.Trim());
+        var username = Username.Trim();
 
-        Console.WriteLine($"User '{Username}' created successfully.");
-        //ApplicationStateService.Instance.SetCurrentUser(Username.Trim());
+        if (UserService.UserNameExists(username))
+        {
+            ErrorMessage = "That username is already taken.";
+            return;
+        }
 
+        UserService.CreateUser(username, Password);
+        ErrorMessage = "";
         Close();
     }
 
