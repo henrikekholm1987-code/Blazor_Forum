@@ -17,9 +17,16 @@ public class ThreadServices
     {
         return _dbContext.ThreadItems
             .Include(t => t.ApplicationUser)
+            .Include(t => t.Category)
             .Include(t => t.Comments)
                 .ThenInclude(c => c.ApplicationUser)
                 .OrderByDescending(t => t.CreatedAt)
+            .ToList();
+    }
+    public List<Category> GetAllCategories()
+    {
+        return _dbContext.Categories
+            .OrderBy(c => c.Name)
             .ToList();
     }
 

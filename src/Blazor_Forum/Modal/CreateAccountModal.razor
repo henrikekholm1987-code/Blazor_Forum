@@ -1,7 +1,10 @@
 @using Application.ServiceLocator
+@using Application.Auth
 
 @inject CreateAccountModalState ModalState
 @inject ApplicationUserService UserService
+@inject AuthService AuthService
+
 
 @implements IDisposable
 
@@ -46,7 +49,6 @@
 
 @code 
 {
-    
     string Username = "";
     string Password = "";
     string ConfirmPassword = "";
@@ -78,6 +80,10 @@
     private void Submit()
     {
         UserService.CreateUser(Username.Trim(), Password.Trim());
+
+        Console.WriteLine($"User '{Username}' created successfully.");
+        //ApplicationStateService.Instance.SetCurrentUser(Username.Trim());
+
         Close();
     }
 

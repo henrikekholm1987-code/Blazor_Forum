@@ -2,8 +2,9 @@
 bin/
 obj/
 
-# Rider / IntelliJ
+# Rider / IntelliJ / Visual Studio
 .idea/
+.vs/
 
 # User-specific settings
 *.user
@@ -13,20 +14,9 @@ obj/
 # macOS
 .DS_Store
 
-# SQLite temp files
+# SQLite temp files (själva .db-filen ska med i repot)
 *.db-shm
 *.db-wal
 
 # Logs
 *.log
-
-.vs/
-bin/
-obj/
-*.user
-
-*.db
-
-*.db
-*.db-shm
-*.db-wal

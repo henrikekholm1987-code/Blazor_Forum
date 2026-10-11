@@ -1,3 +1,4 @@
+
 namespace Entities;
 
 public class ThreadItem
@@ -9,5 +10,7 @@ public class ThreadItem
 
     public ApplicationUser ApplicationUser { get; set; } = null!;
     public List<Comment>? Comments { get; set; } = new();
+    public int? CategoryId { get; set; }
+    public Category? Category { get; set; }
 }
 
